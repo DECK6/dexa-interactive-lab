@@ -31,3 +31,4 @@
 - 12:13 조사 완료: 배포 실장소는 adxdeck-dexa-daily-main (vfx deploy.sh가 rsync), 카드는 projects.json(dev 섹션, script.js fallback은 labs 미포함), 테마 토큰은 gen-lab src/theme/dexa-theme.css
 - 12:20 DESIGN.md 확정, B1 에이전트 디스패치
 - 13:05 완료: dexa.art/interactive 라이브, 전 AC 충족. Codex 인계 불필요(토큰·시간 여유)
+- 13:35 v1.1: 사용자 피드백 반영 — 핑거프레임 이펙트 12종 재질·질감 세트로 교체(유리 7 + 스크린 미디어 5, 모션 왜곡 제거), build·unit 24·e2e 3/3 재검증, 재배포
