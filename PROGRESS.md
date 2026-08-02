@@ -5,13 +5,13 @@
 
 ## Acceptance Criteria
 
-- [ ] AC1: Vite+TS 프로젝트, `bun run build` exit 0, `bun test` 통과
-- [ ] AC2: 01 Off-Axis — 얼굴추적→Kooima 오프액시스 투영, DEXA 씬, 미검출 fallback
-- [ ] AC3: 02 Finger Frame — 양손 4점 사각형 마스크 GLSL 8종, 비틀기 전환
-- [ ] AC4: 랜딩 + DEXA 다크 테마 + 프라이버시 라인
-- [ ] AC5: Playwright fake-cam 스모크 3페이지 통과 (콘솔 에러 0)
-- [ ] AC6: GitHub DECK6/dexa-interactive-lab 생성, README, 푸시
-- [ ] AC7: dexa.art/interactive 라이브 (200) + 메인 Dev Lab 카드 추가·푸시
+- [x] AC1: Vite+TS 프로젝트, `bun run build` exit 0, `bun test` 통과
+- [x] AC2: 01 Off-Axis — 얼굴추적→Kooima 오프액시스 투영, DEXA 씬, 미검출 fallback
+- [x] AC3: 02 Finger Frame — 양손 4점 사각형 마스크 GLSL 8종, 비틀기 전환
+- [x] AC4: 랜딩 + DEXA 다크 테마 + 프라이버시 라인
+- [x] AC5: Playwright fake-cam 스모크 3페이지 통과 (콘솔 에러 0)
+- [x] AC6: GitHub DECK6/dexa-interactive-lab 생성, README, 푸시
+- [x] AC7: dexa.art/interactive 라이브 (200) + 메인 Dev Lab 카드 추가·푸시
 
 ## Batches
 
@@ -24,9 +24,10 @@
 - [x] B3 QA·문서: e2e 3/3 통과(Fable 재검증), README, deploy.sh — 12:48 (commit db83ac5)
 - [x] B4 배포: DECK6/dexa-interactive-lab 생성·푸시, dist→interactive rsync,
       dev-16 카드 추가(충돌 해결: 원격이 dev-15 GLSL LAB 선점 → 내 카드 dev-16, 최신순 배치),
-      adxdeck main ec44cce 푸시 — 13:00. 라이브 200 확인 폴링 중
+      adxdeck main ec44cce 푸시 — 13:00. 라이브 200 확인(13:05, 3페이지+모델 자산)
 
 ## Log
 
 - 12:13 조사 완료: 배포 실장소는 adxdeck-dexa-daily-main (vfx deploy.sh가 rsync), 카드는 projects.json(dev 섹션, script.js fallback은 labs 미포함), 테마 토큰은 gen-lab src/theme/dexa-theme.css
 - 12:20 DESIGN.md 확정, B1 에이전트 디스패치
+- 13:05 완료: dexa.art/interactive 라이브, 전 AC 충족. Codex 인계 불필요(토큰·시간 여유)
