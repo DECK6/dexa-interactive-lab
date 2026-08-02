@@ -1,0 +1,99 @@
+/* ==========================================================================
+   DEXA Design System — tokens (identical to dexa-gen-lab src/theme/dexa-theme.css)
+   Source of truth: /Dev/dexa_design_system (DESIGN.md, index.html)
+   Rule: light chrome (Paper + Signal Orange) / dark exhibition surfaces (Ink + Dexa Cyan)
+   INTERACTIVE LAB runs entirely on the dark exhibition surface.
+   ========================================================================== */
+
+:root{
+  --paper:#F5F1E6; --panel:#EBE4D3; --panel2:#E3DBC6; --ink:#17181B;
+  --line:#D9D0BB; --muted:#6A644F; --orange:#FF5A1F; --orange-hover:#E64D14;
+  --cyan:#5EE7F3; --red:#E0402A; --red-text:#B33320;
+  --ink-display:#0D0E10; --ink-key:#2A2B2E; --ink-key2:#3A3B3F;
+  --ink-text:#8A8D93; --ink-text-dim:#5A5D63;
+  --font-sans:'Space Grotesk','Pretendard Variable',Pretendard,'Noto Sans KR',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+
+*{box-sizing:border-box;}
+body{margin:0;background:var(--ink-display);color:#F7FAFC;font-family:var(--font-sans);-webkit-font-smoothing:antialiased;}
+::selection{background:var(--cyan);color:var(--ink);}
+a{color:inherit;text-decoration:none;}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;}
+.mono{font-family:var(--font-mono);}
+.hidden{display:none !important;}
+.blink{animation:dexa-blink 1.6s infinite;}
+@keyframes dexa-blink{0%,49%{opacity:1;}50%,100%{opacity:0.15;}}
+@media (prefers-reduced-motion: reduce){.blink{animation:none;}}
+
+/* --------------------------------------------------------------------------
+   LAB HUD — overlay chips on top of a live canvas. Mono 11px, ink-display panels.
+   -------------------------------------------------------------------------- */
+.hud{position:fixed;inset:0;z-index:10;pointer-events:none;font-family:var(--font-mono);font-size:11px;letter-spacing:0.06em;}
+.hud a{pointer-events:auto;}
+.hud-chip{position:absolute;background:rgba(13,14,16,0.82);border:1px solid var(--ink-key);border-radius:6px;padding:8px 12px;color:var(--ink-text);backdrop-filter:blur(6px);}
+.hud-tl{top:18px;left:18px;display:flex;align-items:baseline;gap:12px;}
+.hud-tl .wordmark{font-family:var(--font-sans);font-weight:700;font-size:13px;letter-spacing:-0.02em;color:#F7FAFC;}
+.hud-tl .wordmark .dot{color:var(--cyan);}
+.hud-tl .title{color:var(--cyan);text-transform:uppercase;}
+.hud-tr{top:18px;right:18px;display:flex;align-items:center;gap:10px;}
+.hud-bc{bottom:24px;left:50%;transform:translateX(-50%);text-align:center;color:var(--ink-text);}
+.hud-flash{bottom:74px;left:50%;transform:translateX(-50%);color:var(--orange);border-color:var(--orange);opacity:0;transition:opacity 160ms ease;}
+.hud-flash.on{opacity:1;}
+
+/* status dot — cyan when tracking, gray when idle */
+.dot{width:7px;height:7px;border-radius:50%;background:var(--ink-key2);flex:none;transition:background 160ms ease,box-shadow 160ms ease;}
+.dot.on{background:var(--cyan);box-shadow:0 0 8px var(--cyan);}
+.dot.off{background:var(--ink-key2);box-shadow:none;}
+.hud-fps{color:var(--ink-text-dim);min-width:52px;text-align:right;}
+
+/* debug readout used by the experience stubs */
+.hud-debug{bottom:24px;left:18px;white-space:pre;line-height:1.5;color:var(--cyan);}
+
+/* --------------------------------------------------------------------------
+   STAGE — fullscreen canvas + hidden capture video
+   -------------------------------------------------------------------------- */
+.stage{position:fixed;inset:0;background:var(--ink-display);}
+.stage canvas{display:block;width:100%;height:100%;}
+video.capture{position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;top:0;left:0;}
+
+/* camera failure panel — replaces the stage, so it is not pointer-events:none */
+.cam-error{position:fixed;inset:0;z-index:30;display:grid;place-content:center;gap:14px;padding:32px;text-align:center;background:var(--ink-display);}
+.cam-error .code{font-family:var(--font-mono);font-size:11px;letter-spacing:0.08em;color:var(--orange);}
+.cam-error h2{margin:0;font-size:clamp(22px,3vw,30px);font-weight:700;letter-spacing:-0.02em;}
+.cam-error p{margin:0;max-width:440px;color:var(--ink-text);font-size:14px;line-height:1.7;}
+.cam-error a{font-family:var(--font-mono);font-size:11px;letter-spacing:0.06em;color:var(--cyan);border-bottom:1px solid var(--cyan);}
+
+/* --------------------------------------------------------------------------
+   LANDING — dark exhibition band
+   -------------------------------------------------------------------------- */
+.lab-page{max-width:1200px;margin:0 auto;padding:40px 40px 64px;}
+.lab-head{display:flex;align-items:baseline;justify-content:space-between;gap:20px;flex-wrap:wrap;padding-bottom:20px;border-bottom:1px solid var(--ink-key);}
+.lab-head .wordmark{font-size:20px;font-weight:700;letter-spacing:-0.03em;}
+.lab-head .wordmark .dot{color:var(--cyan);}
+.lab-head .side{font-family:var(--font-mono);font-size:10px;letter-spacing:0.08em;color:var(--ink-text-dim);}
+.lab-hero{padding:72px 0 56px;}
+.lab-hero .display{display:inline-block;margin-bottom:28px;padding:12px 16px;border-radius:8px;background:var(--ink);font-family:var(--font-mono);font-size:11px;letter-spacing:0.08em;color:var(--cyan);}
+.lab-hero h1{margin:0 0 22px;font-size:clamp(38px,6vw,80px);line-height:1.0;font-weight:700;letter-spacing:-0.035em;}
+.lab-hero h1 .cy{color:var(--cyan);}
+.lab-hero p{margin:0;max-width:600px;color:var(--ink-text);font-size:16px;line-height:1.75;}
+.lab-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;}
+.lab-card{display:flex;flex-direction:column;gap:14px;min-height:280px;padding:28px 26px;border:1px solid var(--ink-key);border-radius:12px;background:var(--ink);transition:border-color 0.15s,background 0.15s;}
+.lab-card:hover{border-color:var(--cyan);background:#1B1C20;}
+.lab-card .num{font-family:var(--font-mono);font-size:11px;letter-spacing:0.1em;color:var(--orange);}
+.lab-card h2{margin:0;font-size:26px;font-weight:700;letter-spacing:-0.02em;line-height:1.2;}
+.lab-card .caption{font-family:var(--font-mono);font-size:10px;letter-spacing:0.08em;color:var(--cyan);text-transform:uppercase;}
+.lab-card p{margin:0;color:var(--ink-text);font-size:14px;line-height:1.7;}
+.lab-card .foot{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.badge{display:inline-block;padding:4px 9px;border:1px solid var(--cyan);border-radius:20px;font-family:var(--font-mono);font-size:9px;letter-spacing:0.08em;color:var(--cyan);}
+.enter{font-family:var(--font-mono);font-size:11px;letter-spacing:0.08em;color:var(--orange);}
+.lab-privacy{margin:56px 0 0;padding:18px 20px;border:1px solid var(--ink-key);border-radius:8px;background:var(--ink);font-family:var(--font-mono);font-size:11px;line-height:1.8;letter-spacing:0.03em;color:var(--ink-text);}
+.lab-privacy .k{color:var(--cyan);}
+.lab-foot{margin-top:44px;padding-top:22px;border-top:1px solid var(--ink-key);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:var(--font-mono);font-size:11px;letter-spacing:0.06em;color:var(--ink-text-dim);}
+.lab-foot a:hover{color:var(--cyan);}
+
+@media (max-width:640px){
+  .lab-page{padding:24px 20px 48px;}
+  .lab-hero{padding:48px 0 40px;}
+  .hud-tl{gap:8px;flex-direction:column;}
+}
