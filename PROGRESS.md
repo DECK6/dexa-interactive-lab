@@ -7,7 +7,7 @@
 
 - [x] AC1: Vite+TS 프로젝트, `bun run build` exit 0, `bun test` 통과
 - [x] AC2: 01 Off-Axis — 얼굴추적→Kooima 오프액시스 투영, DEXA 씬, 미검출 fallback
-- [x] AC3: 02 Finger Frame — 양손 4점 사각형 마스크 GLSL 8종, 비틀기 전환
+- [x] AC3: 02 Finger Frame — 양손 4점 사각형 마스크 GLSL 12종(유리 7 + 스크린 5), 비틀기 전환
 - [x] AC4: 랜딩 + DEXA 다크 테마 + 프라이버시 라인
 - [x] AC5: Playwright fake-cam 스모크 3페이지 통과 (콘솔 에러 0)
 - [x] AC6: GitHub DECK6/dexa-interactive-lab 생성, README, 푸시

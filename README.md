@@ -34,8 +34,11 @@ single WebGL2 program inverse-bilinear-maps each pixel into quad-local space, so
 inside the frame is re-rendered — everything outside stays dimmed camera feed with a cyan
 viewfinder edge. Twisting the frame past a hysteresis threshold cycles the effect.
 
-Eight effects, selected by one int uniform: `WAVE RIPPLE` · `RGB GLITCH` · `PIXELATE` ·
-`KALEIDO` · `NEON EDGE` · `VORTEX` · `HALFTONE` · `THERMAL`.
+Twelve effects, selected by one int uniform. None of them animate the image: the quad reads either
+as a material you look through — `FROSTED GLASS` · `REEDED GLASS` · `RIPPLE GLASS` ·
+`STAINED GLASS` · `PRISM GLASS` · `CRACKED ICE` · `GLASS BLOCK` — or as a surface the feed is
+displayed on — `CRT PHOSPHOR` · `LED WALL` · `HALFTONE PRINT` · `NEWSPRINT` · `FILM GRAIN`. Only
+film grain and the CRT flicker touch the clock.
 
 ## Stack
 
@@ -89,8 +92,9 @@ MediaPipe Tasks로 처리되며, 그 결과가 렌더링을 직접 구동합니�
   매 프레임 비대칭 절두체를 만들어 모니터를 창문처럼 다룹니다. 고개를 움직이면 창 너머 공간이 실제
   시차를 그리며 열립니다. `-` / `=` 로 실제 모니터 폭을 맞추고, `v` 로 웹캠 미리보기를 켭니다.
 - **02 핑거 프레임** — 양손 엄지와 검지 끝 4점이 만드는 사각형 안쪽에만 GLSL 이펙트가 걸립니다.
-  역이중선형 매핑으로 프레임 내부 좌표를 구하고, 프레임을 비틀 때마다 다음 셰이더로 순환합니다
-  (8종).
+  역이중선형 매핑으로 프레임 내부 좌표를 구하고, 프레임을 비틀 때마다 다음 셰이더로 순환합니다.
+  프레임 안은 들여다보는 재질(간유리·리브드글라스·스테인드글라스·깨진 얼음·유리블럭 등 7종)이거나
+  피드가 표시된 화면(CRT·LED 월·하프톤 인쇄·신문지·필름 5종)으로 읽힙니다 (12종).
 
 **프라이버시** — 모든 처리는 브라우저 로컬에서 이뤄집니다. 영상 프레임은 페이지를 벗어나지 않으며
 어디에도 전송되지 않습니다. 추적 모델과 WASM 런타임도 이 사이트에 함께 배포되어 외부 CDN을 호출하지

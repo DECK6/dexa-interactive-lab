@@ -96,12 +96,16 @@ export async function createHandTracker(video: HTMLVideoElement): Promise<{ read
 - 프래그먼트: `quadUV = invBilinear(uv, c0..c3)`; 내부(0..1)면 `effect(effectIndex, tex, quadUV, uv, time)`,
   경계 0.01 폭 시안 글로우 프레임 + 코너 마커(뷰파인더 느낌), 외부는 원본 0.55 dim + 약한 비네트.
 - corners 유니폼은 OneEuro 스무딩(코너당 x,y). 손 미검출 시 프레임 서서히 축소·페이드.
-- 이펙트 8종 (단일 프로그램, int 유니폼 분기):
-  1 wave-ripple(중심 радиal sin 왜곡) · 2 rgb-glitch(채널 시프트+스캔라인 지터) ·
-  3 pixelate(모자이크, 셀 크기 애니) · 4 kaleido(폴라 미러 6분할) ·
-  5 neon-edge(sobel→시안 글로우 on Ink) · 6 vortex(반경 비례 스월) ·
-  7 halftone(시안/오렌지 도트) · 8 thermal(휘도→Ink→시안→오렌지 램프)
-- TwistDetector 발화 시 인덱스 ±1 순환, HUD에 이펙트 이름 800ms 플래시 (`01 / WAVE RIPPLE`).
+- 이펙트 12종 (단일 프로그램, int 유니폼 분기). 프레임 안쪽은 "들여다보는 재질"이거나
+  "피드가 표시된 화면"으로 읽힌다. 표면은 정지 — 시간에 반응하는 건 필름 그레인과 CRT 플리커뿐.
+  유리·재질: 1 frosted glass(스파이럴 블러+미세 노이즈 굴절) · 2 reeded glass(세로 리브, 리브 기울기로 수평 굴절) ·
+  3 ripple glass(정적 사인 표면 굴절+스펙큘러) · 4 stained glass(보로노이 셀 색조+납선) ·
+  5 prism glass(중심 방사 색분산, 가장자리로 갈수록 강함) · 6 cracked ice(파편별 오프셋·회전+균열선) ·
+  7 glass block(5×4 유리블럭, 블럭별 배럴 굴절+두꺼운 이음매)
+  스크린 텍스처: 8 crt phosphor(RGB 트라이어드+스캔라인+튜브 벌지) · 9 led wall(사각 발광체+글로우) ·
+  10 halftone print(15° 도트, 시안/오렌지 잉크 on 종이) · 11 newsprint(45° 그레이 도트+종이 그레인+잉크 번짐) ·
+  12 film grain(S커브+웜 페이드+애니메이션 그레인+비네트)
+- TwistDetector 발화 시 인덱스 ±1 순환, HUD에 이펙트 이름 800ms 플래시 (`01 / FROSTED GLASS`).
 - HUD: 안내("양손 엄지와 검지로 사각형을 만들어 보세요 · 비틀면 이펙트 전환"), 상태 dot, fps.
 
 ## 6. 랜딩 (index.html)

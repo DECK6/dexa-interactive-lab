@@ -1,6 +1,6 @@
 // 02 FINGER FRAME — the quad drawn by two hands is a live viewport: whatever
-// falls inside it is re-rendered by one of eight GLSL effects, and twisting the
-// frame cycles them.
+// falls inside it is re-rendered as glass, ice or a screen surface by one of
+// twelve GLSL effects, and twisting the frame cycles them.
 import '../theme/dexa-theme.css'
 import { initCamera, stopCamera } from '../lib/camera'
 import { createHandTracker } from '../lib/tracking/hands'
@@ -137,7 +137,7 @@ async function main(): Promise<void> {
     const dir = frame.present ? twist.update(frame.roll, now) : 0
     if (dir !== 0) {
       effect = (effect + dir + EFFECTS.length) % EFFECTS.length
-      hud.flash(`0${effect + 1} / ${EFFECTS[effect].name}`)
+      hud.flash(`${String(effect + 1).padStart(2, '0')} / ${EFFECTS[effect].name}`)
     }
 
     // Cover crop: the video fills the viewport, uCover is the visible fraction.
