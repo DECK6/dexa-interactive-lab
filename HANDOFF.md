@@ -33,4 +33,6 @@ PROGRESS.md의 미체크 배치가 곧 남은 작업. 각 배치의 verify를 �
 
 ## 세션별 인계 메모
 
-- (갱신 예정)
+- 2026-08-02 13:00 — B0~B4 전부 완료. 남은 것은 dexa.art/interactive 200 확인뿐(Pages 빌드 대기).
+  주의: 원격 projects.json에서 dev-15는 GLSL LAB(다른 세션 발행)이 선점 → INTERACTIVE LAB은 dev-16.
+  로컬 미추적 glsl/은 원격과 동일 확인 후 scratchpad로 이동해 해소.

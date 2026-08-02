@@ -21,8 +21,10 @@
 - [x] B2a 오프액시스 — Kooima P·M·T 검증, 씬 스펙 충족, 12:40 (commit 4376e41)
 - [x] B2b 핑거프레임 — 8이펙트 단일 프로그램, invBilinear GLSL, 트위스트 전환, 12:40 (commit 4376e41)
       integrated verify: bun run build exit 0, bun test 24 pass
-- [ ] B3 QA·문서: Playwright e2e, README — Opus-5 실행 중
-- [ ] B4 배포: gh repo 생성·푸시, deploy.sh, projects.json 카드, adxdeck 푸시, 라이브 확인 — Fable
+- [x] B3 QA·문서: e2e 3/3 통과(Fable 재검증), README, deploy.sh — 12:48 (commit db83ac5)
+- [x] B4 배포: DECK6/dexa-interactive-lab 생성·푸시, dist→interactive rsync,
+      dev-16 카드 추가(충돌 해결: 원격이 dev-15 GLSL LAB 선점 → 내 카드 dev-16, 최신순 배치),
+      adxdeck main ec44cce 푸시 — 13:00. 라이브 200 확인 폴링 중
 
 ## Log
 
