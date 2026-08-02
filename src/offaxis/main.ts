@@ -95,7 +95,9 @@ async function main(): Promise<void> {
     if (e.key === 'v') togglePip()
   })
 
-  const smooth = new OneEuroVec3(1.5, 0.03)
+  // Low min-cutoff: small head-position noise (mostly the IPD-derived z) would
+  // otherwise swing the deep background; beta keeps deliberate moves responsive.
+  const smooth = new OneEuroVec3(0.6, 0.03)
   const target = { ...REST }
   const eye = { ...REST }
 

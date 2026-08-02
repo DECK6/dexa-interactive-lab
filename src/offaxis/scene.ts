@@ -14,6 +14,8 @@ const CYAN = 0x5ee7f3
 const ORANGE = 0xff5a1f
 
 const ROOM_DEPTH = 1.2
+// The scene should feel mostly still; parallax is the show, not self-motion.
+const SPIN_SCALE = 0.45
 
 export interface Room {
   scene: THREE.Scene
@@ -56,17 +58,17 @@ export function createRoom(): Room {
 
     update(tSec: number): void {
       for (const f of floaters) {
-        f.mesh.rotation.x += f.spin.x
-        f.mesh.rotation.y += f.spin.y
-        f.mesh.rotation.z += f.spin.z
-        f.mesh.position.y = f.home.y + Math.sin(tSec * f.bobRate + f.phase) * 0.014
+        f.mesh.rotation.x += f.spin.x * SPIN_SCALE
+        f.mesh.rotation.y += f.spin.y * SPIN_SCALE
+        f.mesh.rotation.z += f.spin.z * SPIN_SCALE
+        f.mesh.position.y = f.home.y + Math.sin(tSec * f.bobRate + f.phase) * 0.006
       }
       // Idle sway so the room breathes even with no head to track.
-      floaterGroup.position.x = Math.sin(tSec * 0.11) * 0.008
-      floaterGroup.position.y = Math.sin(tSec * 0.09 + 1.7) * 0.006
+      floaterGroup.position.x = Math.sin(tSec * 0.11) * 0.003
+      floaterGroup.position.y = Math.sin(tSec * 0.09 + 1.7) * 0.002
 
-      accent.arc.rotation.z = tSec * 0.18
-      accent.ring.scale.setScalar(1 + Math.sin(tSec * 0.5) * 0.02)
+      accent.arc.rotation.z = tSec * 0.05
+      accent.ring.scale.setScalar(1 + Math.sin(tSec * 0.5) * 0.01)
 
       dust.update(tSec)
     },
