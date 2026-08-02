@@ -64,12 +64,12 @@ export async function createFaceTracker(
       const eyeDistPx = Math.hypot(bx - ax, by - ay)
       const z = (IPD_M * focalPx) / eyeDistPx
 
-      // Mirror x: the raw camera image is not flipped, so a viewer moving to
-      // their right moves toward lower image x — and we want that to be +x.
+      // Horizontal sign chosen by feel on the live installation (user-tested):
+      // parallax must run opposite to the mirrored-x reading.
       const mx = (lm[EYE_L].x + lm[EYE_R].x) / 2
       const my = (lm[EYE_L].y + lm[EYE_R].y) / 2
       const screenW = getScreenWidthM()
-      const x = (0.5 - mx) * screenW
+      const x = (mx - 0.5) * screenW
       const y = (0.5 - my) * screenW * (h / w)
 
       const s = smooth.filter({ x, y, z }, performance.now() / 1000)
