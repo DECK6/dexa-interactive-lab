@@ -1,5 +1,4 @@
 import { FaceLandmarker, FilesetResolver } from '@mediapipe/tasks-vision'
-import { OneEuroVec3 } from '../math/one-euro'
 import { getScreenWidthM } from '../config'
 
 /** Screen-centred metres: x right+, y up+, z out of the screen toward the viewer (always > 0). */
@@ -36,7 +35,6 @@ export async function createFaceTracker(
     })
   }
 
-  const smooth = new OneEuroVec3(1.2, 0.02)
   let pose: HeadPose = { x: 0, y: 0, z: 0.6, present: false }
   let lastVideoTime = -1
 
@@ -72,8 +70,8 @@ export async function createFaceTracker(
       const x = (mx - 0.5) * screenW
       const y = (0.5 - my) * screenW * (h / w)
 
-      const s = smooth.filter({ x, y, z }, performance.now() / 1000)
-      pose = { x: s.x, y: s.y, z: s.z, present: true }
+      // Raw measurement — smoothing is the caller's job (offaxis/main.ts).
+      pose = { x, y, z, present: true }
       return pose
     },
     dispose(): void {

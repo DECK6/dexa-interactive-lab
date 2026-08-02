@@ -10,7 +10,7 @@ import * as THREE from 'three'
 import { initCamera, stopCamera } from '../lib/camera'
 import { createFaceTracker } from '../lib/tracking/face'
 import { createHud, showCameraError } from '../lib/hud'
-import { getScreenWidthM, setScreenWidthM } from '../lib/config'
+import { getScreenWidthM, setScreenWidthM, getParallaxGain, setParallaxGain } from '../lib/config'
 import { OneEuroVec3 } from '../lib/math/one-euro'
 import { kooimaProjection } from '../lib/math/offaxis-projection'
 import { createRoom } from './scene'
@@ -32,7 +32,7 @@ async function main(): Promise<void> {
   const hud = createHud({
     title: '01 OFF-AXIS WINDOW',
     sub: 'HEAD-TRACKED',
-    hint: '화면 앞에서 머리를 움직여 보세요 · - / = 화면 크기 · v 웹캠',
+    hint: '화면 앞에서 머리를 움직여 보세요 · - / = 화면 크기 · [ / ] 반응 강도 · v 웹캠',
   })
   document.body.append(hud.el)
 
@@ -92,6 +92,12 @@ async function main(): Promise<void> {
       applyScreen()
       hud.flash(`SCREEN ${w.toFixed(2)} m`)
     }
+    if (e.key === '[' || e.key === ']') {
+      const step = e.key === ']' ? 0.05 : -0.05
+      const g = clamp(Math.round((getParallaxGain() + step) * 100) / 100, 0.1, 1)
+      setParallaxGain(g)
+      hud.flash(`PARALLAX ${Math.round(g * 100)}%`)
+    }
     if (e.key === 'v') togglePip()
   })
 
@@ -112,9 +118,12 @@ async function main(): Promise<void> {
 
     const pose = tracker.read()
     if (pose.present) {
-      target.x = pose.x
-      target.y = pose.y
-      target.z = clamp(pose.z, 0.2, 2)
+      // Gain < 1 keeps the projection axis calm: full physical parallax swings
+      // the whole frustum far more than feels right on an installation.
+      const g = getParallaxGain()
+      target.x = pose.x * g
+      target.y = pose.y * g
+      target.z = REST.z + (clamp(pose.z, 0.2, 2) - REST.z) * g
     } else {
       const k = 1 - Math.exp(-dt / REST_TAU)
       target.x += (REST.x - target.x) * k

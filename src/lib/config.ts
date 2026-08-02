@@ -12,3 +12,17 @@ export function getScreenWidthM(): number {
 export function setScreenWidthM(v: number): void {
   localStorage.setItem(KEY, String(v))
 }
+
+// How much of the measured head offset drives the projection axis. 1 = full
+// physical parallax; installations usually want far less swing.
+const GAIN_KEY = 'dexa-il.parallaxGain'
+const GAIN_DEFAULT = 0.35
+
+export function getParallaxGain(): number {
+  const raw = Number(localStorage.getItem(GAIN_KEY))
+  return Number.isFinite(raw) && raw > 0 ? raw : GAIN_DEFAULT
+}
+
+export function setParallaxGain(v: number): void {
+  localStorage.setItem(GAIN_KEY, String(v))
+}
