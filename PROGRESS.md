@@ -16,10 +16,10 @@
 ## Batches
 
 - [x] B0 설계: DESIGN.md 작성 (Fable) — 12:20
-- [ ] B1 파운데이션: scaffold, 테마, camera/tracking/math libs, 모델 번들, 랜딩 — Opus-5
-      verify: bun run build && bun test
-- [ ] B2a 오프액시스 (Opus-5, B1 후 병렬) — verify: build + 수동 스모크
-- [ ] B2b 핑거프레임 (Opus-5, B1 후 병렬) — verify: build + 수동 스모크
+- [x] B1 파운데이션: scaffold, 테마, camera/tracking/math libs, 모델 번들, 랜딩 — Opus-5
+      verified: bun run build exit 0, bun test 24 pass, models/wasm 번들, commit c6aa1f7 — 12:30
+- [ ] B2a 오프액시스 (Opus-5, 병렬 실행 중) — verify: tsc+test (커밋은 오케스트레이터)
+- [ ] B2b 핑거프레임 (Opus-5, 병렬 실행 중) — verify: tsc+test (커밋은 오케스트레이터)
 - [ ] B3 QA·문서: Playwright e2e, README — Opus-5
 - [ ] B4 배포: gh repo 생성·푸시, deploy.sh, projects.json 카드, adxdeck 푸시, 라이브 확인 — Fable
 
