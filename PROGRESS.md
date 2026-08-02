@@ -18,9 +18,10 @@
 - [x] B0 설계: DESIGN.md 작성 (Fable) — 12:20
 - [x] B1 파운데이션: scaffold, 테마, camera/tracking/math libs, 모델 번들, 랜딩 — Opus-5
       verified: bun run build exit 0, bun test 24 pass, models/wasm 번들, commit c6aa1f7 — 12:30
-- [ ] B2a 오프액시스 (Opus-5, 병렬 실행 중) — verify: tsc+test (커밋은 오케스트레이터)
-- [ ] B2b 핑거프레임 (Opus-5, 병렬 실행 중) — verify: tsc+test (커밋은 오케스트레이터)
-- [ ] B3 QA·문서: Playwright e2e, README — Opus-5
+- [x] B2a 오프액시스 — Kooima P·M·T 검증, 씬 스펙 충족, 12:40 (commit 4376e41)
+- [x] B2b 핑거프레임 — 8이펙트 단일 프로그램, invBilinear GLSL, 트위스트 전환, 12:40 (commit 4376e41)
+      integrated verify: bun run build exit 0, bun test 24 pass
+- [ ] B3 QA·문서: Playwright e2e, README — Opus-5 실행 중
 - [ ] B4 배포: gh repo 생성·푸시, deploy.sh, projects.json 카드, adxdeck 푸시, 라이브 확인 — Fable
 
 ## Log

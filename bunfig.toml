@@ -1,0 +1,3 @@
+[test]
+# Playwright specs live in tests/e2e and must not be picked up by `bun test`.
+root = "./tests/unit"
