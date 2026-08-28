@@ -1,12 +1,12 @@
 # DEXA INTERACTIVE LAB
 
-**Two webcam interactives** that recompute what the screen shows from where your body is.
+**Three webcam interactives** that recompute what the screen shows from where your body is.
 
 **Live:** https://dexa.art/interactive/
 
 ## What it is
 
-A static web app with two realtime computer-vision experiences. Face and hand landmarks are
+A static web app with three realtime computer-vision experiences. Face and hand landmarks are
 inferred in the browser with MediaPipe Tasks, and the result drives the render directly — a
 projection matrix in one case, a shader mask in the other. No install, no account, no server.
 
@@ -40,14 +40,25 @@ as a material you look through — `FROSTED GLASS` · `REEDED GLASS` · `RIPPLE 
 displayed on — `CRT PHOSPHOR` · `LED WALL` · `HALFTONE PRINT` · `NEWSPRINT` · `FILM GRAIN`. Only
 film grain and the CRT flicker touch the clock.
 
+### 03 Marionette
+
+Your hand is a marionette control bar. `HandLandmarker` tracks one hand; strings run from the five
+fingertips to a physics puppet — outer fingers to the arms, index and ring to the legs, middle to
+the head. The puppet is a position-verlet rig (rigid sticks for the skeleton, unilateral rope
+constraints for the strings, a floor with friction), so tilting and swinging the hand steers it,
+curling a finger drops that limb, and hiding the hand collapses it in a heap. Strings reel in at a
+finite speed and an anti-fold nudge keeps the torso from mirror-flipping under violent yanks. The
+thumb-vs-pinky x order decides which side of the puppet each finger drives, so either hand works,
+palm in or out.
+
 ## Stack
 
 | part | choice |
 |---|---|
 | build | Vite 6 + TypeScript, vanilla (no framework), multi-page |
 | tracking | `@mediapipe/tasks-vision` — FaceLandmarker, HandLandmarker, VIDEO mode |
-| render | three.js for 01, raw WebGL2 for 02 |
-| smoothing | One Euro filter on head pose and on every frame corner |
+| render | three.js for 01, raw WebGL2 for 02, Canvas 2D for 03 |
+| smoothing | One Euro filter on head pose, frame corners and string anchors |
 | runtime | bun for packages and unit tests, Playwright for e2e |
 
 Landmark jitter is the main enemy in both experiences, so every tracked value passes through a One
@@ -62,7 +73,7 @@ bun install
 bun run dev          # http://localhost:5173/interactive/
 bun test             # math unit tests
 bun run build        # typecheck + production build
-bun run test:e2e     # playwright fake-camera smoke, all three pages
+bun run test:e2e     # playwright fake-camera smoke, all four pages
 bun run deploy       # rsync dist/ into the dexa.art repo
 ```
 
@@ -85,7 +96,7 @@ The Vite `base` is `/interactive/`; serving from a different path requires chang
 
 ## 한국어 요약
 
-웹캠 기반 인터랙티브 체험 2종을 담은 정적 웹앱입니다. 얼굴·손 랜드마크 추론은 모두 브라우저 안에서
+웹캠 기반 인터랙티브 체험 3종을 담은 정적 웹앱입니다. 얼굴·손 랜드마크 추론은 모두 브라우저 안에서
 MediaPipe Tasks로 처리되며, 그 결과가 렌더링을 직접 구동합니다.
 
 - **01 오프액시스 윈도우** — 얼굴 추적으로 머리의 3D 위치를 추정하고, Kooima의 일반화 원근 투영으로
@@ -95,6 +106,9 @@ MediaPipe Tasks로 처리되며, 그 결과가 렌더링을 직접 구동합니�
   역이중선형 매핑으로 프레임 내부 좌표를 구하고, 프레임을 비틀 때마다 다음 셰이더로 순환합니다.
   프레임 안은 들여다보는 재질(간유리·리브드글라스·스테인드글라스·깨진 얼음·유리블럭 등 7종)이거나
   피드가 표시된 화면(CRT·LED 월·하프톤 인쇄·신문지·필름 5종)으로 읽힙니다 (12종).
+- **03 마리오네트** — 손이 곧 마리오네트 컨트롤 바입니다. 다섯 손가락 끝에서 스트링이 내려와 물리
+  퍼펫(버렛 적분 + 스틱/로프 제약)의 머리·팔·다리에 묶입니다. 손을 기울이고 흔들면 퍼펫이 춤추고,
+  손가락을 굽히면 그 팔다리가 떨어지며, 손을 감추면 퍼펫이 무너집니다.
 
 **프라이버시** — 모든 처리는 브라우저 로컬에서 이뤄집니다. 영상 프레임은 페이지를 벗어나지 않으며
 어디에도 전송되지 않습니다. 추적 모델과 WASM 런타임도 이 사이트에 함께 배포되어 외부 CDN을 호출하지

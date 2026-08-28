@@ -6,7 +6,7 @@
     <title>DEXA INTERACTIVE LAB</title>
     <meta
       name="description"
-      content="Webcam interactive experiments — head-tracked off-axis projection and a finger-framed shader viewport. All processing stays in the browser."
+      content="Webcam interactive experiments — head-tracked off-axis projection, a finger-framed shader viewport and a hand-strung marionette. All processing stays in the browser."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -29,7 +29,7 @@
         </div>
         <h1>웹캠으로<br />화면을 <span class="cy">비틀다</span></h1>
         <p>
-          얼굴과 손을 실시간으로 추적해 화면의 규칙을 바꾸는 두 가지 실험.
+          얼굴과 손을 실시간으로 추적해 화면의 규칙을 바꾸는 세 가지 실험.
           카메라 앞에서 몸을 움직이면 렌더링이 그에 맞춰 다시 계산됩니다.
           설치할 것도, 로그인할 것도 없습니다.
         </p>
@@ -57,6 +57,21 @@
           <p>
             양손 엄지와 검지로 만든 사각형 안쪽에만 이펙트가 걸립니다.
             프레임을 비틀 때마다 다음 셰이더로 넘어갑니다. 손가락이 곧 뷰파인더입니다.
+          </p>
+          <div class="foot">
+            <span class="badge mono">REQUIRES WEBCAM</span>
+            <span class="enter mono">ENTER →</span>
+          </div>
+        </a>
+
+        <a class="lab-card" href="./puppet.html">
+          <div class="num mono">03</div>
+          <h2>마리오네트</h2>
+          <div class="caption">MARIONETTE / HAND-STRUNG PHYSICS PUPPET</div>
+          <p>
+            손이 곧 마리오네트 컨트롤 바입니다. 다섯 손가락 끝에서 스트링이 내려와
+            로봇 퍼펫의 머리와 팔다리에 묶입니다. 기울이고 흔들어 조종해 보세요 —
+            손을 감추면 퍼펫이 무너집니다.
           </p>
           <div class="foot">
             <span class="badge mono">REQUIRES WEBCAM</span>

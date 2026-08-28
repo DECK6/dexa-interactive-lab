@@ -12,6 +12,7 @@ export default defineConfig({
         index: resolve(__dirname, 'index.html'),
         offaxis: resolve(__dirname, 'offaxis.html'),
         fingerframe: resolve(__dirname, 'fingerframe.html'),
+        puppet: resolve(__dirname, 'puppet.html'),
       },
     },
   },

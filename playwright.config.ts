@@ -1,6 +1,8 @@
 import { defineConfig } from '@playwright/test'
 
-const PORT = 4173
+// Overridable because 4173 is vite's shared default — another project's dev
+// server on it would get silently reused and tested instead of this app.
+const PORT = Number(process.env.PW_PORT ?? 4173)
 
 export default defineConfig({
   testDir: './tests/e2e',

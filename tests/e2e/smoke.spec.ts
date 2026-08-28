@@ -61,11 +61,13 @@ test('landing page offers both experiences', async ({ page }) => {
   await expect(page.locator('.lab-head .wordmark')).toBeVisible()
 
   const cards = page.locator('.lab-card')
-  await expect(cards).toHaveCount(2)
+  await expect(cards).toHaveCount(3)
   await expect(cards.nth(0)).toBeVisible()
   await expect(cards.nth(1)).toBeVisible()
+  await expect(cards.nth(2)).toBeVisible()
   await expect(cards.nth(0)).toHaveAttribute('href', './offaxis.html')
   await expect(cards.nth(1)).toHaveAttribute('href', './fingerframe.html')
+  await expect(cards.nth(2)).toHaveAttribute('href', './puppet.html')
   await expect(page.locator('.lab-privacy')).toBeVisible()
 
   expect(w.errors).toEqual([])
@@ -82,6 +84,21 @@ test('01 off-axis window boots and reports no face', async ({ page }) => {
   await waitForRenderLoop(page)
   // Written by the loop from the tracker's own pose, not by the initial markup.
   await expect(page.locator('.hud-debug')).toContainText('NO FACE')
+  await expect(page.locator('.hud-tr .dot')).toHaveClass(/\boff\b/)
+
+  expectSameOriginAssets(page, w)
+  expect(w.errors).toEqual([])
+})
+
+test('03 marionette boots and reports no hand', async ({ page }) => {
+  const w = watch(page)
+  await page.goto('puppet.html')
+
+  await expect(page.locator('canvas#stage')).toBeVisible()
+  await expect(page.locator('.hud-tl .wordmark')).toBeVisible()
+  await expect(page.locator('.hud-bc')).toContainText('손바닥을 펴서')
+
+  await waitForRenderLoop(page)
   await expect(page.locator('.hud-tr .dot')).toHaveClass(/\boff\b/)
 
   expectSameOriginAssets(page, w)
