@@ -47,13 +47,13 @@ async function waitForRenderLoop(page: Page): Promise<void> {
 /** Models and wasm are bundled under public/, never pulled from the MediaPipe CDN. */
 function expectSameOriginAssets(page: Page, w: Watch): void {
   expect(w.requests.filter((u) => u.includes('storage.googleapis.com'))).toEqual([])
-  const assets = w.requests.filter((u) => /\/(models\/[\w-]+\.task|wasm\/vision_wasm)/.test(u))
+  const assets = w.requests.filter((u) => /\/(models\/[\w-]+\.(task|tflite)|wasm\/vision_wasm)/.test(u))
   expect(assets.length).toBeGreaterThan(0)
   const origin = new URL(page.url()).origin
   expect(assets.filter((u) => !u.startsWith(origin))).toEqual([])
 }
 
-test('landing page offers both experiences', async ({ page }) => {
+test('landing page offers all eight experiences', async ({ page }) => {
   const w = watch(page)
   await page.goto('./')
 
@@ -61,13 +61,21 @@ test('landing page offers both experiences', async ({ page }) => {
   await expect(page.locator('.lab-head .wordmark')).toBeVisible()
 
   const cards = page.locator('.lab-card')
-  await expect(cards).toHaveCount(3)
-  await expect(cards.nth(0)).toBeVisible()
-  await expect(cards.nth(1)).toBeVisible()
-  await expect(cards.nth(2)).toBeVisible()
-  await expect(cards.nth(0)).toHaveAttribute('href', './offaxis.html')
-  await expect(cards.nth(1)).toHaveAttribute('href', './fingerframe.html')
-  await expect(cards.nth(2)).toHaveAttribute('href', './puppet.html')
+  const hrefs = [
+    './offaxis.html',
+    './fingerframe.html',
+    './puppet.html',
+    './echo.html',
+    './dust.html',
+    './fluid.html',
+    './graffiti.html',
+    './snow.html',
+  ]
+  await expect(cards).toHaveCount(hrefs.length)
+  for (const [i, href] of hrefs.entries()) {
+    await expect(cards.nth(i)).toBeVisible()
+    await expect(cards.nth(i)).toHaveAttribute('href', href)
+  }
   await expect(page.locator('.lab-privacy')).toBeVisible()
 
   expect(w.errors).toEqual([])
@@ -119,3 +127,30 @@ test('02 finger frame boots and reports no hands', async ({ page }) => {
   expectSameOriginAssets(page, w)
   expect(w.errors).toEqual([])
 })
+
+// v2 experiences. The segmentation pages skip the tracking-dot assertion: the
+// fake device's colour-bar pattern may register as a sliver of "person".
+const V2: { title: string; url: string; hint: string; hasDot: boolean }[] = [
+  { title: '04 time echo', url: 'echo.html', hint: '움직여 보세요', hasDot: false },
+  { title: '05 dust face', url: 'dust.html', hint: '입을 벌리면', hasDot: true },
+  { title: '06 neon fluid', url: 'fluid.html', hint: '허공을 저어', hasDot: true },
+  { title: '07 air graffiti', url: 'graffiti.html', hint: '허공에 그려', hasDot: true },
+  { title: '08 snowfall', url: 'snow.html', hint: '어깨 위에', hasDot: false },
+]
+
+for (const exp of V2) {
+  test(`${exp.title} boots on the fake camera`, async ({ page }) => {
+    const w = watch(page)
+    await page.goto(exp.url)
+
+    await expect(page.locator('canvas#stage')).toBeVisible()
+    await expect(page.locator('.hud-tl .wordmark')).toBeVisible()
+    await expect(page.locator('.hud-bc')).toContainText(exp.hint)
+
+    await waitForRenderLoop(page)
+    if (exp.hasDot) await expect(page.locator('.hud-tr .dot')).toHaveClass(/\boff\b/)
+
+    expectSameOriginAssets(page, w)
+    expect(w.errors).toEqual([])
+  })
+}

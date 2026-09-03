@@ -6,7 +6,7 @@
     <title>DEXA INTERACTIVE LAB</title>
     <meta
       name="description"
-      content="Webcam interactive experiments — head-tracked off-axis projection, a finger-framed shader viewport and a hand-strung marionette. All processing stays in the browser."
+      content="Eight webcam interactive experiments — head-tracked off-axis projection, finger-framed shaders, a hand-strung marionette, segmentation time echoes, a dust face that scatters when you open your mouth, fingertip fluid ink, mid-air light graffiti and snow that piles on your shoulders. All processing stays in the browser."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -29,7 +29,7 @@
         </div>
         <h1>웹캠으로<br />화면을 <span class="cy">비틀다</span></h1>
         <p>
-          얼굴과 손을 실시간으로 추적해 화면의 규칙을 바꾸는 세 가지 실험.
+          얼굴, 손, 몸의 윤곽을 실시간으로 추적해 화면의 규칙을 바꾸는 여덟 가지 실험.
           카메라 앞에서 몸을 움직이면 렌더링이 그에 맞춰 다시 계산됩니다.
           설치할 것도, 로그인할 것도 없습니다.
         </p>
@@ -72,6 +72,76 @@
             손이 곧 마리오네트 컨트롤 바입니다. 다섯 손가락 끝에서 스트링이 내려와
             로봇 퍼펫의 머리와 팔다리에 묶입니다. 기울이고 흔들어 조종해 보세요 —
             손을 감추면 퍼펫이 무너집니다.
+          </p>
+          <div class="foot">
+            <span class="badge mono">REQUIRES WEBCAM</span>
+            <span class="enter mono">ENTER →</span>
+          </div>
+        </a>
+
+        <a class="lab-card" href="./echo.html">
+          <div class="num mono">04</div>
+          <h2>시간 메아리</h2>
+          <div class="caption">TIME ECHO / SEGMENTATION TRAILS</div>
+          <p>
+            움직이면 0.1초 전, 0.2초 전의 내가 시안에서 오렌지로 물든 잔상이 되어 따라옵니다.
+            멈추면 모두 내 안으로 돌아옵니다. 춤을 춰 보세요.
+          </p>
+          <div class="foot">
+            <span class="badge mono">REQUIRES WEBCAM</span>
+            <span class="enter mono">ENTER →</span>
+          </div>
+        </a>
+
+        <a class="lab-card" href="./dust.html">
+          <div class="num mono">05</div>
+          <h2>먼지 얼굴</h2>
+          <div class="caption">DUST FACE / BLENDSHAPE PARTICLES</div>
+          <p>
+            얼굴이 2만 개의 먼지 입자로 떠 있습니다. 입을 벌리면 얼굴이 폭발하듯 흩어지고,
+            다물면 다시 모여 내가 됩니다. 고개를 돌리면 바람이 붑니다.
+          </p>
+          <div class="foot">
+            <span class="badge mono">REQUIRES WEBCAM</span>
+            <span class="enter mono">ENTER →</span>
+          </div>
+        </a>
+
+        <a class="lab-card" href="./fluid.html">
+          <div class="num mono">06</div>
+          <h2>손끝 유체</h2>
+          <div class="caption">NEON FLUID / HAND-DRIVEN FLUID SIM</div>
+          <p>
+            손가락 끝마다 네온 잉크가 흘러나와 화면 전체를 소용돌이로 채웁니다.
+            손가락을 집으면 잉크 한 방울이 터집니다. 진짜 유체 방정식이 돌고 있습니다.
+          </p>
+          <div class="foot">
+            <span class="badge mono">REQUIRES WEBCAM</span>
+            <span class="enter mono">ENTER →</span>
+          </div>
+        </a>
+
+        <a class="lab-card" href="./graffiti.html">
+          <div class="num mono">07</div>
+          <h2>공중 낙서</h2>
+          <div class="caption">AIR GRAFFITI / PINCH-TO-DRAW LIGHT</div>
+          <p>
+            엄지와 검지를 집으면 허공에 빛으로 글씨가 써집니다. 왼손은 시안, 오른손은 오렌지.
+            주먹을 쥐면 지워지고, SNAPSHOT 버튼으로 사진처럼 저장됩니다.
+          </p>
+          <div class="foot">
+            <span class="badge mono">REQUIRES WEBCAM</span>
+            <span class="enter mono">ENTER →</span>
+          </div>
+        </a>
+
+        <a class="lab-card" href="./snow.html">
+          <div class="num mono">08</div>
+          <h2>쌓이는 눈</h2>
+          <div class="caption">SNOWFALL / MASK-COLLIDING SNOW</div>
+          <p>
+            눈이 내 머리와 어깨, 내민 손바닥 위에 진짜처럼 쌓입니다.
+            몸을 털면 우수수 떨어지고, 자리를 비우면 모두 바닥으로 사라집니다.
           </p>
           <div class="foot">
             <span class="badge mono">REQUIRES WEBCAM</span>

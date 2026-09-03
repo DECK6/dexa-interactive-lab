@@ -129,3 +129,104 @@ gen-lab 랜딩 구조 참고. Ink 다크, 상단 워드마크 `DEXA INTERACTIVE 
 3. `adxdeck-dexa-daily-main/projects.json`에 dev 카드 추가(dev-15, url "/interactive/", size large, badge NEW,
    repo 링크, category "Webcam · Realtime CV"). script.js fallback은 건드리지 않음(labs 미포함 확인됨).
 4. adxdeck-dexa-daily-main 커밋·푸시(main) → GitHub Pages 반영 확인
+
+---
+
+# v2 addendum — 04~08 (2026-09-03)
+
+Author: Fable (설계·기반·검수) / Implementers: Codex gpt-5.6-sol ×5 병렬 (모듈별) / 통합·QA: Fable
+
+## 0. 목표
+
+"보는 순간 놀라고, 찍어서 올리고 싶은" 웹캠 인터랙티브 5종 추가. 각 페이지는 한 문장으로 설명되는
+와우 포인트 하나를 가진다. 모든 페이지에 SNAPSHOT(PNG 저장, DEXA 워드마크 스탬프) 공통 제공 — 공유 유도.
+
+| # | 파일 | 이름 | 모달리티 | 한 줄 와우 |
+|---|------|------|----------|-----------|
+| 04 | echo.html / src/echo | TIME ECHO 시간 메아리 | ImageSegmenter | 움직이면 과거의 내가 시안→오렌지 잔상으로 따라온다 |
+| 05 | dust.html / src/dust | DUST FACE 먼지 얼굴 | FaceLandmarker+blendshapes | 내 얼굴이 2만 개 먼지로 떠 있고, 입을 벌리면 흩어졌다 다시 모인다 |
+| 06 | fluid.html / src/fluid | NEON FLUID 손끝 유체 | HandLandmarker ×2 | 손가락 끝에서 네온 잉크가 흘러나와 소용돌이친다 |
+| 07 | graffiti.html / src/graffiti | AIR GRAFFITI 공중 낙서 | HandLandmarker ×2 | 손가락을 집으면 허공에 빛으로 글씨가 써지고, PNG로 저장된다 |
+| 08 | snow.html / src/snow | SNOWFALL 쌓이는 눈 | ImageSegmenter | 눈이 내 머리와 어깨 위에 진짜처럼 쌓이고, 몸을 털면 떨어진다 |
+
+## 1. 공통 기반 (Fable 작성, 구현자는 수정 금지)
+
+- `public/models/selfie_segmenter.tflite` 추가(fetch-models.mjs). 런타임 CDN 없음 유지.
+- `src/lib/tracking/segmenter.ts` — `createSegmenter(video)` → `{ read(): PersonMask; dispose() }`
+  `PersonMask { data: Float32Array|null; width; height; present; coverage; sample(u,v): number }`
+  data는 **비디오 원본 방향**(미러 아님) 행우선. `sample(u,v)`는 **미러 적용된** 정규화 좌표(손 트래커와 동일 관례)로 0..1 확률 반환.
+- `src/lib/tracking/face-blend.ts` — `createFaceBlendTracker(video)` → `{ read(): FaceState; dispose() }`
+  `FaceState { landmarks: Vec2[]|null (478, 미러·정규화); blend: Record<string,number>; present }`
+  blend 키는 MediaPipe categoryName 그대로(`jawOpen`, `browInnerUp`, `eyeBlinkLeft`…). `FACE_OVAL` 인덱스 export.
+- `src/lib/tracking/hands2.ts` — `createTwoHandTracker(video)` → `{ read(): TwoHands; dispose() }`
+  `TwoHands { hands: HandData[]; present }`, `HandData { landmarks: Vec2[] (21, 미러·정규화); label: string }`
+  hands는 **손목 x 오름차순**(화면 왼쪽이 index 0). `FINGERTIPS`, `PALM` 인덱스 export.
+- `src/lib/cover.ts` — `coverMap(videoW, videoH, canvasW, canvasH)` → `{ toScreen(p: Vec2): Vec2; coverX; coverY }`
+  (비디오를 뷰포트에 cover-crop 했을 때 정규화 좌표→캔버스 px, fingerframe/puppet과 동일 수식)
+- `src/lib/gl.ts` — `createProgram(gl, vs, fs)`, `FULLSCREEN_VS`, `createTexture(gl, {filter, wrap})`, `uploadVideo(gl, tex, video)`
+- `src/lib/hud.ts` — `createHud({ title, sub, hint, snapshot?: () => HTMLCanvasElement | null })`.
+  snapshot이 주어지면 우하단 `SNAPSHOT ⤓` 버튼(Signal Orange) + `S` 키. 저장 파일명 `dexa-<slug>-<yyyymmdd-hhmmss>.png`,
+  우하단에 `DEXA INTERACTIVE LAB.` 워드마크 스탬프 합성, 저장 후 `SAVED` 플래시.
+- 페이지 HTML 5개, vite input, 랜딩 카드 5장(04~08), e2e 5케이스(+카드 수 8) — Fable.
+
+## 2. 모듈 공통 규칙
+
+- 진입점 `src/<mod>/main.ts`는 puppet/main.ts 구조를 따른다: HUD → initCamera(실패 시 showCameraError) → 트래커 →
+  resize(dpr≤2) → rAF 루프(dt clamp 0.1, fps EMA, presence 엔벨로프) → pagehide 정리.
+- 순수 로직은 DOM 없는 모듈로 분리해 `tests/unit/<mod>.test.ts`(bun test)로 검증. 렌더/GL은 테스트 제외.
+- 색은 DEXA 토큰만: Ink `#0D0E10` 배경, Cyan `#5EE7F3`, Orange `#FF5A1F`, key `#2A2B2E`. 다른 hue 금지(hue 드리프트는 시안↔오렌지 사이에서만).
+- 미검출 상태에서도 화면이 죽어 있으면 안 된다(아이들 모션 + HUD 힌트).
+- 라이브러리 추가 금지(three는 필요 시만). 런타임 CDN 금지. TypeScript strict, noUnused.
+
+## 3. 04 TIME ECHO
+
+- WebGL2. 링 버퍼 32슬롯: 슬롯당 비디오 프레임 텍스처(RGBA, 비디오 해상도) + 마스크 텍스처(R8 256²) + 타임스탬프.
+  새 비디오 프레임마다 슬롯 갱신(video.currentTime 변화 시).
+- 에코 7겹: k=0(라이브, 원색) + k=1..6 (지연 k·spacing, 기본 spacing 0.12s). 각 k는 `now - k·spacing`에 가장 가까운 슬롯.
+  틴트: k=1 시안 → k=6 오렌지 선형, 알파 0.6→0.15. 그리기 순서 오래된 것부터, 라이브 마지막. 블렌드 screen/additive.
+- 마스크 엣지 smoothstep(0.35, 0.65). 배경: 원본 피드 0.18 밝기 + Ink.
+- 키: `[`/`]` spacing 0.04~0.3s, `v` 배경 피드 토글. 사람 미검출: 에코 페이드아웃, HUD 힌트.
+- 테스트: `ring.ts` — `class FrameRing { constructor(n); push(t); pick(t): index|-1 }` 시간 기반 슬롯 선택.
+
+## 4. 05 DUST FACE
+
+- FaceLandmarker(blendshapes on). 파티클 20,000(FPS<40 지속 시 1회 절반).
+- 홈 좌표: FACE_OVAL 다각형 내부에서 균등 샘플(스폰 시 point-in-polygon). 저장은 oval bbox-local (u,v). 매 프레임 홈 = 현재 bbox로 사상 → 머리 이동·스케일 추종.
+- 색: 버텍스 셰이더에서 비디오 텍스처를 홈 UV(미러)로 샘플 → 살아있는 얼굴색. scatter 정도에 따라 시안으로 믹스.
+- 물리(CPU Float32Array): 스프링 복귀(k 18, damping 0.88) + 컬 노이즈 미세 흔들림. `jawOpen ≥ 0.45`: 입 중심(13·14 중점)에서 방사 임펄스(강도 ∝ jawOpen) + 난류, 복귀 스프링 off, 드래그만. 입 닫으면 복귀. 머리 yaw(코끝 1 vs 눈 코너 33·263 비대칭)로 바람 방향. `browInnerUp ≥ 0.5` 반짝임(지터).
+- 렌더: WebGL2 POINTS, 크기 2.5px·dpr, additive 블렌드, Ink 배경 + 점 그리드. `v` 희미한 피드 토글(기본 off). `r` 재시드.
+- 얼굴 미검출: 마지막 홈 유지 + 느린 드리프트, 30초 후 구름처럼 확산.
+- 테스트: `particles.ts` — `createDust(n)`, `seedHomes(oval: Vec2[], n, rng)`, `step(state, dt, input)` 순수 함수. 입 열면 평균 홈 거리 증가, 닫으면 감소 검증.
+
+## 5. 06 NEON FLUID
+
+- WebGL2 Stable Fluids(Stam/Dobryakov 구조를 직접 구현, 외부 코드 복사·라이브러리 금지): sim 128(짧은 변), dye 512~1024.
+  단계: curl → vorticity(30) → divergence → pressure Jacobi 20 → gradient subtract → advect velocity(dissipation 0.2/s) → advect dye(1.0/s) → splats.
+  EXT_color_buffer_float 있으면 RGBA16F, 없으면 RGBA8 폴백.
+- 이미터: 두 손 손가락 끝 10점. 속도 = (pos - prev)/dt. 색: hand0 시안 계열, hand1 오렌지 계열, 손가락별 미세 hue 변주 + 시간 드리프트(시안↔오렌지 사이).
+  핀치(엄지-검지 거리/손바닥 크기 < 0.4) → 잉크 드롭: 반경 ×4, 방사 속도 버스트.
+- 배경: 피드 0.25 밝기. 손 미검출: 1.5s마다 은은한 앰비언트 splat, HUD 힌트.
+- 테스트: `emitters.ts` — `computeEmitters(prev: HandData[]|null, curr: HandData[], dt): Emitter[]`, `isPinching(hand): boolean`, `emitterColor(handIdx, fingerIdx, t): [r,g,b]` (0..1, hue가 시안~오렌지 밖으로 나가지 않음).
+
+## 6. 07 AIR GRAFFITI
+
+- 두 손. 핀치 히스테리시스(0.45 on / 0.65 off, 손바닥 크기 정규화). 펜 끝 = 엄지·검지 끝 중점, OneEuro(1.5, 0.6).
+- 스트로크: 최소 세그먼트 2px, 폭 = 속도 매핑(느림 14px ↔ 빠름 3px, dpr 스케일). 손0 시안, 손1 오렌지. 두 손 동시 드로잉 가능.
+- 렌더(Canvas2D): 글로우 3패스(4×폭 α0.12 → 2×폭 α0.3 → 1×폭 α1 + 0.4×폭 화이트 코어). 은은한 글로우 펄스. 배경 = 미러 피드 0.55 밝기(사람이 사진에 들어온다).
+- 주먹(네 손가락 끝이 PIP보다 손목에 가까움) 0.8s 유지 → 전체 지우기(0.5s 디졸브). `c` 지우기, `z` 되돌리기. 포인트 20,000 초과 시 오래된 스트로크부터 제거.
+- SNAPSHOT 필수(피드+스트로크 합성).
+- 테스트: `ink.ts` — `class PinchGate { update(ratio): boolean }`, `widthForSpeed(pxPerSec, dpr): number`, `class Stroke { add(p, t): boolean }`, `isFist(landmarks): boolean`.
+
+## 7. 08 SNOWFALL
+
+- ImageSegmenter. 플레이크 1,800: 반지름 1.5~4px, 낙하 40~120px/s(크기 비례), 좌우 sway(sin), 화면 밖 아래로 나가면 위에서 리스폰.
+- 착지: 이번 스텝 이동으로 mask(0.5) 밖→안 진입 시 이전 위치에 정지(resting). resting은 매 프레임 마스크 재확인: 밖이면 낙하 재개(작은 랜덤 임펄스), 마스크 안쪽으로 깊이 묻히면 위로 최대 40px 표면 탐색 후 재정지, 실패 시 낙하.
+- 털기: 마스크 모션 에너지(연속 프레임 마스크 차분 평균)가 임계 이상이면 resting 플레이크가 확률적으로 떨어짐(에너지 비례).
+- 사람 2s 미검출: 전부 낙하. `r` 리셋. HUD 우측 `SNOW LOAD n` 카운터(resting 수).
+- 렌더(Canvas2D): 피드 0.35 밝기 + 마스크 실루엣 시안 틴트 α0.10, 플레이크 = 흰~시안 점 + 소프트 글로우.
+- 테스트: `flakes.ts` — `createFlakes(n, w, h, rng)`, `stepFlakes(flakes, dt, mask: (x,y)=>number, motion: number, w, h)`. 합성 사각형 마스크에 착지·마스크 제거 시 낙하·바닥 아래 미존재 검증.
+
+## 8. 검증·배포
+
+- 게이트: `bunx tsc --noEmit` exit 0, `bun test` 전부 통과, `bun run build` exit 0, Playwright 9케이스(랜딩+8) 콘솔 에러 0·동일 출처 자산.
+- 배포: deploy.sh → adxdeck-blog-main/interactive, projects.json dev-16 설명 갱신(8종). **푸시는 사용자 승인 게이트**.

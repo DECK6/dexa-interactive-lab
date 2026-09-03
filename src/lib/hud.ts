@@ -8,7 +8,21 @@ export interface Hud {
   flash(text: string): void
 }
 
-export function createHud(opts: { title: string; sub: string; hint: string }): Hud {
+export interface HudOpts {
+  title: string
+  sub: string
+  hint: string
+  /**
+   * Enables the SNAPSHOT button (and the `S` key). Return the canvas to save —
+   * WebGL canvases need `preserveDrawingBuffer: true` or a synchronous redraw
+   * inside this callback. Return null when there is nothing worth saving.
+   */
+  snapshot?: () => HTMLCanvasElement | null
+  /** File-name slug for snapshots, e.g. 'graffiti'. Defaults to the lower-cased title. */
+  slug?: string
+}
+
+export function createHud(opts: HudOpts): Hud {
   const el = document.createElement('div')
   el.className = 'hud'
   el.innerHTML = `
@@ -23,6 +37,7 @@ export function createHud(opts: { title: string; sub: string; hint: string }): H
     </div>
     <div class="hud-chip hud-bc">${opts.hint}</div>
     <div class="hud-chip hud-flash"></div>
+    ${opts.snapshot ? '<div class="hud-chip hud-br"><button class="snap" type="button">SNAPSHOT ⤓</button></div>' : ''}
   `
 
   const dot = el.querySelector('.hud-tr .dot') as HTMLElement
@@ -30,7 +45,7 @@ export function createHud(opts: { title: string; sub: string; hint: string }): H
   const flashEl = el.querySelector('.hud-flash') as HTMLElement
   let flashTimer: ReturnType<typeof setTimeout>
 
-  return {
+  const hud: Hud = {
     el,
     setTracking(on: boolean): void {
       dot.className = `dot ${on ? 'on' : 'off'}`
@@ -45,6 +60,62 @@ export function createHud(opts: { title: string; sub: string; hint: string }): H
       flashTimer = setTimeout(() => flashEl.classList.remove('on'), 800)
     },
   }
+
+  if (opts.snapshot) {
+    const slug = opts.slug ?? opts.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+    const take = (): void => {
+      const src = opts.snapshot!()
+      if (!src || !src.width) {
+        hud.flash('NOTHING TO SAVE')
+        return
+      }
+      saveSnapshot(src, slug)
+      hud.flash('SAVED')
+    }
+    ;(el.querySelector('.snap') as HTMLButtonElement).addEventListener('click', take)
+    window.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (e.key === 's' || e.key === 'S') take()
+    })
+  }
+
+  return hud
+}
+
+/** Composites the DEXA wordmark onto a copy of `src` and triggers a PNG download. */
+function saveSnapshot(src: HTMLCanvasElement, slug: string): void {
+  const out = document.createElement('canvas')
+  out.width = src.width
+  out.height = src.height
+  const ctx = out.getContext('2d') as CanvasRenderingContext2D
+  ctx.drawImage(src, 0, 0)
+
+  const scale = Math.max(1, out.width / 1200)
+  const pad = 24 * scale
+  const size = 15 * scale
+  ctx.textBaseline = 'alphabetic'
+  ctx.textAlign = 'right'
+  ctx.font = `700 ${size}px "Space Grotesk", sans-serif`
+  const dotW = ctx.measureText('.').width
+  ctx.fillStyle = '#5EE7F3'
+  ctx.fillText('.', out.width - pad, out.height - pad - size * 1.2)
+  ctx.fillStyle = '#F7FAFC'
+  ctx.fillText('DEXA INTERACTIVE LAB', out.width - pad - dotW, out.height - pad - size * 1.2)
+  ctx.font = `400 ${10 * scale}px "JetBrains Mono", monospace`
+  ctx.fillStyle = '#8A8D93'
+  ctx.fillText('dexa.art/interactive', out.width - pad, out.height - pad)
+
+  const d = new Date()
+  const two = (n: number): string => String(n).padStart(2, '0')
+  const stamp = `${d.getFullYear()}${two(d.getMonth() + 1)}${two(d.getDate())}-${two(d.getHours())}${two(d.getMinutes())}${two(d.getSeconds())}`
+  out.toBlob((blob) => {
+    if (!blob) return
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `dexa-${slug}-${stamp}.png`
+    a.click()
+    setTimeout(() => URL.revokeObjectURL(url), 1000)
+  }, 'image/png')
 }
 
 const CAMERA_COPY: Record<CameraErrorKind, { title: string; body: string }> = {
