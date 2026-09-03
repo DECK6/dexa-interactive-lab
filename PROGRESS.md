@@ -36,3 +36,38 @@
   (버렛 + 스틱/단방향 로프 제약 + 릴인 속도 제한 + 토르소 anti-fold) 조종. Canvas 2D 로봇 렌더링,
   랜딩 카드 3번, e2e 4페이지. verify: bun test 32 pass, build exit 0, e2e 4/4(PW_PORT 오버라이드
   추가 — 4173을 다른 프로젝트 dev 서버가 점유), 합성 앵커 비주얼 QA 4포즈 스크린샷 검수
+
+## v2 — 04~08 (2026-09-03, 세션 시작 20:55 KST)
+
+오케스트레이션: Fable 설계·기반·검수 / Codex gpt-5.6-sol ×5 병렬 구현 / 푸시는 사용자 승인 게이트
+
+### Acceptance Criteria (v2)
+- [x] AC8: 5페이지(echo/dust/fluid/graffiti/snow) 각각 DESIGN v2 스펙의 와우 포인트 동작, 미검출 아이들, SNAPSHOT
+- [x] AC9: `bunx tsc --noEmit` 0, `bun test` 전부 통과(모듈별 ≥6 테스트), `bun run build` exit 0
+- [x] AC10: Playwright 9케이스(랜딩+8) 콘솔 에러 0, 동일 출처 자산
+- [x] AC11: 합성 인물 y4m으로 세그멘테이션 극성·에코·눈 착지·먼지 얼굴 비주얼 QA 스크린샷 검수
+- [ ] AC12: 랜딩 8카드, README 갱신, adxdeck 배포(로컬 커밋), projects.json dev-16 설명 8종 — 푸시는 승인 대기
+
+### Batches (v2)
+- [x] V0 설계: DESIGN.md v2 addendum — 21:05
+- [x] V1 기반(Fable): selfie_segmenter 모델, segmenter/face-blend/hands2 트래커, cover.ts, gl.ts, HUD 스냅샷(+S키·워드마크 스탬프),
+      5 HTML, vite input, 랜딩 카드 5장, e2e 5케이스, cover 테스트 — tsc 0, bun test 36 pass, commit 1b97d4b — 21:20
+- [x] V2 구현(Codex sol ×5 병렬, 21:22 발주 → 22:20 전원 완료): echo / dust / fluid / graffiti / snow — 발주서 scratchpad/prompts/*.md
+      게이트: 모듈별 tsc 0 + bun test 통과 → Fable 코드 리뷰 → build → e2e
+- [x] V3 QA(22:40): 합성 인물 y4m 비주얼 QA, 수정 라운드(Codex 재위임 또는 Fable 직접)
+- [ ] V4 마감: README, PROGRESS, deploy.sh → adxdeck-blog-main 로컬 커밋, projects.json — 푸시 승인 요청
+
+### Log (v2)
+- 21:20 기반 커밋 1b97d4b. Codex sol ×5 발주 21:22.
+- 21:35 합성 인물 스틸 4장(Codex 이미지 툴) → y4m 5클립(still/move/mouth/hand/pinch). 트래커 프로브(_segqa) 결과:
+  세그멘터 극성 정상(사람 1·벽 0, coverage 0.36, 마스크는 비디오 해상도 640x480 — 256²가 아님),
+  face jawOpen 열림 0.96 / 닫힘 0.30~0.47(합성 스틸이라 닫힘값이 높음 → 히스테리시스 0.5/0.3 권장),
+  hands label 'Right'=관람자 오른손(미러 관례와 일치), pinchRatio 핀치 0.08~0.12 / 펼침 1.0~1.1.
+- 22:05 Codex 4/5 완료(snow·graffiti·dust·echo, fluid 진행 중). 게이트: 각 모듈 tsc 0·bun test 통과(9/9/7/9).
+  비주얼 QA(헤드리스 y4m): snow 착지·털기 정상(SNOW LOAD 374→0), graffiti 핀치 루프 정상, echo 잔상 정상, dust 얼굴 집합 정상.
+  Fable 수정: dust 입 히스테리시스(0.5/0.35 — 합성 스틸 닫힘값 0.47이 0.45 단일 임계에 걸림) + 밝기 0.3→1.15 + 포인트 3px,
+  graffiti 글로우를 세그먼트별→단일 패스(밴딩 제거·호출 수 1/4), echo additive→screen 블렌드(6겹 겹침 백화 방지).
+  헤드리스 FPS는 모델 CPU 비용 지배(puppet 기준선 15) — 실GPU에서 재확인 필요.
+- 22:40 fluid 완료(8 테스트). 리뷰 수정: DISPLAY_FS 비디오 v 반전(피드가 상하 뒤집혀 보이던 버그). 헤드리스는 소프트웨어 GL이라 염료가 거칠고 10~20 FPS →
+  헤디드(GPU) Chromium으로 재검증: echo/dust/fluid/graffiti/snow 전부 59~61 FPS, 비주얼 정상(스크린샷 scratchpad/qa/shots/h-*).
+  게이트: tsc 0, bun test 78/78, bun run build exit 0, e2e 9/9(PW_PORT=4181).

@@ -1,14 +1,16 @@
 # DEXA INTERACTIVE LAB
 
-**Three webcam interactives** that recompute what the screen shows from where your body is.
+**Eight webcam interactives** that recompute what the screen shows from where your body is.
 
 **Live:** https://dexa.art/interactive/
 
 ## What it is
 
-A static web app with three realtime computer-vision experiences. Face and hand landmarks are
-inferred in the browser with MediaPipe Tasks, and the result drives the render directly — a
-projection matrix in one case, a shader mask in the other. No install, no account, no server.
+A static web app with eight realtime computer-vision experiences. Face and hand landmarks and a
+person-segmentation mask are inferred in the browser with MediaPipe Tasks, and the result drives
+the render directly — a projection matrix, a shader mask, a physics rig, a fluid solver. No
+install, no account, no server. Every v2 page has a `SNAPSHOT` button (or `S`) that saves a PNG
+stamped with the wordmark.
 
 ## Experiences
 
@@ -51,14 +53,54 @@ finite speed and an anti-fold nudge keeps the torso from mirror-flipping under v
 thumb-vs-pinky x order decides which side of the puppet each finger drives, so either hand works,
 palm in or out.
 
+### 04 Time Echo
+
+`ImageSegmenter` (selfie model) cuts you out of the feed every frame. A 32-slot ring buffer keeps
+recent frames and masks; six echoes are drawn from slots 0.12 s apart, tinted cyan at the nearest
+and orange at the farthest, additively, with the live cut-out on top. Move and your past selves fan
+out behind you; stand still and they collapse back into you. `[` / `]` change the spacing, `v`
+toggles the dimmed feed behind the echoes.
+
+### 05 Dust Face
+
+`FaceLandmarker` with blendshapes. Twenty thousand particles are seeded inside the face oval and
+stored in bbox-local coordinates, so the cloud follows your head; each particle samples its live
+colour from the video at its home, so the dust *is* your face. Open your mouth (`jawOpen`) and a
+radial impulse from the mouth blows the cloud apart into cyan; close it and springs pull it back
+together. Head yaw adds wind, raised brows add shimmer. `r` reseeds, `v` shows a faint feed.
+
+### 06 Neon Fluid
+
+A WebGL2 Stable Fluids solver (curl + vorticity confinement, divergence, Jacobi pressure, gradient
+subtraction, semi-Lagrangian advection) at 128 px simulation / up-to-1024 px dye resolution.
+`HandLandmarker` tracks two hands; each of the ten fingertips is an emitter injecting velocity and
+dye — the left-hand family is cyan, the right orange, both drifting only along the cyan–orange
+segment. A pinch bursts an ink drop. `c` clears, `v` toggles the feed.
+
+### 07 Air Graffiti
+
+Pinch thumb and index and you draw with light where your fingers are. Pinch detection is a
+hysteresis gate on tip distance normalised by palm size; the pen tip runs through a One Euro
+filter; stroke width follows speed (slow = thick). Strokes render on Canvas 2D in three glow passes
+over the dimmed mirrored feed, so you are in the picture with your writing. Hold a fist for
+0.8 s to wipe, `z` undoes, `S` saves the PNG.
+
+### 08 Snowfall
+
+Snow falls over the segmentation mask and lands where a flake crosses from outside the person to
+inside — which, since they come from above, means your head, shoulders and any hand you hold out.
+Resting flakes re-check the mask every frame: step aside and they drop, rise into them and they
+climb back to the surface, shake (mask motion energy) and they fall off in proportion. Leave the
+frame for two seconds and everything falls. `r` resets.
+
 ## Stack
 
 | part | choice |
 |---|---|
 | build | Vite 6 + TypeScript, vanilla (no framework), multi-page |
-| tracking | `@mediapipe/tasks-vision` — FaceLandmarker, HandLandmarker, VIDEO mode |
-| render | three.js for 01, raw WebGL2 for 02, Canvas 2D for 03 |
-| smoothing | One Euro filter on head pose, frame corners and string anchors |
+| tracking | `@mediapipe/tasks-vision` — FaceLandmarker (+blendshapes), HandLandmarker, ImageSegmenter, VIDEO mode |
+| render | three.js for 01, raw WebGL2 for 02 · 04 · 05 · 06, Canvas 2D for 03 · 07 · 08 |
+| smoothing | One Euro filter on head pose, frame corners, string anchors and pen tips |
 | runtime | bun for packages and unit tests, Playwright for e2e |
 
 Landmark jitter is the main enemy in both experiences, so every tracked value passes through a One
@@ -73,11 +115,11 @@ bun install
 bun run dev          # http://localhost:5173/interactive/
 bun test             # math unit tests
 bun run build        # typecheck + production build
-bun run test:e2e     # playwright fake-camera smoke, all four pages
+bun run test:e2e     # playwright fake-camera smoke, landing + all eight pages
 bun run deploy       # rsync dist/ into the dexa.art repo
 ```
 
-`bun run models` (run automatically by `dev` and `build`) downloads the two `.task` models once
+`bun run models` (run automatically by `dev` and `build`) downloads the three models once
 and copies the MediaPipe wasm runtime out of `node_modules` into `public/`. Both are served from
 this site's own origin, so the deployed app has no CDN dependency at runtime.
 
@@ -90,14 +132,15 @@ served from the same origin as the page.
 
 ## Deploy
 
-`scripts/deploy.sh` mirrors `dist/` into `../adxdeck-dexa-daily-main/interactive` (stale files go
+`scripts/deploy.sh` mirrors `dist/` into `../adxdeck-blog-main/interactive` (stale files go
 to the macOS Trash rather than being deleted), which publishes to https://dexa.art/interactive/.
 The Vite `base` is `/interactive/`; serving from a different path requires changing it.
 
 ## 한국어 요약
 
-웹캠 기반 인터랙티브 체험 3종을 담은 정적 웹앱입니다. 얼굴·손 랜드마크 추론은 모두 브라우저 안에서
-MediaPipe Tasks로 처리되며, 그 결과가 렌더링을 직접 구동합니다.
+웹캠 기반 인터랙티브 체험 8종을 담은 정적 웹앱입니다. 얼굴·손 랜드마크와 인물 세그멘테이션 추론은 모두
+브라우저 안에서 MediaPipe Tasks로 처리되며, 그 결과가 렌더링을 직접 구동합니다. v2 페이지(04~08)는
+`SNAPSHOT` 버튼(또는 `S`)으로 워드마크가 찍힌 PNG를 저장할 수 있습니다.
 
 - **01 오프액시스 윈도우** — 얼굴 추적으로 머리의 3D 위치를 추정하고, Kooima의 일반화 원근 투영으로
   매 프레임 비대칭 절두체를 만들어 모니터를 창문처럼 다룹니다. 고개를 움직이면 창 너머 공간이 실제
@@ -109,6 +152,17 @@ MediaPipe Tasks로 처리되며, 그 결과가 렌더링을 직접 구동합니�
 - **03 마리오네트** — 손이 곧 마리오네트 컨트롤 바입니다. 다섯 손가락 끝에서 스트링이 내려와 물리
   퍼펫(버렛 적분 + 스틱/로프 제약)의 머리·팔·다리에 묶입니다. 손을 기울이고 흔들면 퍼펫이 춤추고,
   손가락을 굽히면 그 팔다리가 떨어지며, 손을 감추면 퍼펫이 무너집니다.
+- **04 시간 메아리** — 인물 세그멘테이션으로 잘라낸 나의 0.12초 간격 과거 6겹이 시안→오렌지 잔상으로
+  따라옵니다. 움직이면 펼쳐지고 멈추면 내 안으로 돌아옵니다. `[` `]` 간격, `v` 배경 피드.
+- **05 먼지 얼굴** — 얼굴 윤곽 안에 심은 2만 개 입자가 비디오의 실제 색을 띠고 머리를 따라다닙니다.
+  입을 벌리면(blendshape `jawOpen`) 입에서 방사되는 임펄스로 흩어지고, 다물면 스프링이 다시 모읍니다.
+  고개를 돌리면 바람, 눈썹을 올리면 반짝임. `r` 재시드.
+- **06 손끝 유체** — WebGL2 Stable Fluids 솔버 위에서 열 손가락 끝이 속도와 염료를 주입합니다.
+  왼손 시안·오른손 오렌지 계열, 엄지·검지를 집으면 잉크 한 방울이 터집니다. `c` 지우기.
+- **07 공중 낙서** — 엄지와 검지를 집으면 허공에 빛으로 글씨가 써집니다. 속도에 따라 굵기가 변하고
+  글로우 3패스로 렌더링되며, 주먹을 0.8초 쥐면 지워집니다. `z` 되돌리기, `S` PNG 저장.
+- **08 쌓이는 눈** — 눈송이가 세그멘테이션 마스크 밖에서 안으로 들어오는 순간 멈춰, 머리·어깨·내민
+  손 위에 쌓입니다. 비켜서면 떨어지고, 몸을 털면(마스크 모션 에너지) 우수수 떨어집니다. `r` 리셋.
 
 **프라이버시** — 모든 처리는 브라우저 로컬에서 이뤄집니다. 영상 프레임은 페이지를 벗어나지 않으며
 어디에도 전송되지 않습니다. 추적 모델과 WASM 런타임도 이 사이트에 함께 배포되어 외부 CDN을 호출하지

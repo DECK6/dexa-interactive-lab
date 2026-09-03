@@ -36,3 +36,12 @@ PROGRESS.md의 미체크 배치가 곧 남은 작업. 각 배치의 verify를 �
 - 2026-08-02 13:00 — B0~B4 전부 완료. 남은 것은 dexa.art/interactive 200 확인뿐(Pages 빌드 대기).
   주의: 원격 projects.json에서 dev-15는 GLSL LAB(다른 세션 발행)이 선점 → INTERACTIVE LAB은 dev-16.
   로컬 미추적 glsl/은 원격과 동일 확인 후 scratchpad로 이동해 해소.
+
+## v2 인계 메모 (2026-09-03)
+
+- 미션: 04~08 다섯 페이지 추가(echo/dust/fluid/graffiti/snow). 바인딩 스펙은 DESIGN.md 맨 아래 "v2 addendum", 진행 원장은 PROGRESS.md "v2" 섹션.
+- 배포 실장소는 이제 `../adxdeck-blog-main/interactive` (deploy.sh 반영 완료). 카드는 projects.json dev-16 설명만 갱신.
+- 구현은 Codex gpt-5.6-sol 5개가 병렬(발주서: scratchpad/prompts/*.md — 세션 스크래치패드라 유실 가능, DESIGN.md가 원본). 기반 커밋 1b97d4b.
+- QA: 합성 인물 y4m(scratchpad/qa/clips/*.y4m, Codex 이미지 툴로 생성한 스틸을 ffmpeg 크롭 스웨이) + `--use-file-for-fake-video-capture`로 Playwright 스크린샷(qa/shots.mjs).
+- 세그멘터 극성(confidenceMasks[personIndex]가 사람인지)은 y4m QA에서 확인할 것 — 반대면 segmenter.ts에서 `1 - v`.
+- 푸시는 사용자 승인 게이트. 로컬 커밋까지만.
