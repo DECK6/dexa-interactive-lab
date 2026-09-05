@@ -6,7 +6,7 @@
     <title>DEXA INTERACTIVE LAB</title>
     <meta
       name="description"
-      content="Eight webcam interactive experiments — head-tracked off-axis projection, finger-framed shaders, a hand-strung marionette, segmentation time echoes, a dust face that scatters when you open your mouth, fingertip fluid ink, mid-air light graffiti and snow that piles on your shoulders. All processing stays in the browser."
+      content="Thirteen interactive experiments in space, light, motion and matter. Explore with your hands or try the new mouse previews. All webcam processing stays in the browser."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -29,8 +29,8 @@
         </div>
         <h1>웹캠으로<br />화면을 <span class="cy">비틀다</span></h1>
         <p>
-          얼굴, 손, 몸의 윤곽을 실시간으로 추적해 화면의 규칙을 바꾸는 여덟 가지 실험.
-          카메라 앞에서 몸을 움직이면 렌더링이 그에 맞춰 다시 계산됩니다.
+          얼굴, 손, 몸의 윤곽으로 공간과 빛, 움직임과 물성을 바꾸는 열세 가지 실험.
+          새로운 실험은 마우스로 먼저 살펴보고, 웹캠을 연결해 손으로 조작할 수 있습니다.
           설치할 것도, 로그인할 것도 없습니다.
         </p>
       </section>
@@ -41,8 +41,8 @@
           <h2>오프액시스 윈도우</h2>
           <div class="caption">OFF-AXIS WINDOW / HEAD-TRACKED PERSPECTIVE</div>
           <p>
-            얼굴 추적으로 머리의 3D 위치를 추정하고, 모니터를 창문처럼 다룹니다.
-            고개를 좌우로 움직이면 창 너머 공간이 실제 창문처럼 시차를 그리며 열립니다.
+            고개를 옮겨 겹겹의 프레임 뒤를 들여다보세요.
+            손으로 빛을 움직이면 고체에 막히고 반사되는 경로가 깊은 방 안에 드러납니다.
           </p>
           <div class="foot">
             <span class="badge mono">REQUIRES WEBCAM</span>
@@ -55,8 +55,8 @@
           <h2>핑거 프레임</h2>
           <div class="caption">FINGER FRAME / GESTURE-MASKED SHADERS</div>
           <p>
-            양손 엄지와 검지로 만든 사각형 안쪽에만 이펙트가 걸립니다.
-            프레임을 비틀 때마다 다음 셰이더로 넘어갑니다. 손가락이 곧 뷰파인더입니다.
+            양손으로 잡은 영상 한 조각을 부조로 펼치고, 기울여 본 뒤 화면에 남기세요.
+            원래의 12가지 프레임 필터도 모드를 바꾸어 사용할 수 있습니다.
           </p>
           <div class="foot">
             <span class="badge mono">REQUIRES WEBCAM</span>
@@ -147,6 +147,36 @@
             <span class="badge mono">REQUIRES WEBCAM</span>
             <span class="enter mono">ENTER →</span>
           </div>
+        </a>
+        <a class="lab-card" href="./optics.html">
+          <div class="num mono">09 / NEW</div><h2>빛의 방</h2>
+          <div class="caption">LIGHT CHAMBER / REFLECTION &amp; OCCLUSION</div>
+          <p>광원을 옮기고 반사판을 기울여 빛의 길을 바꾸세요. 빛은 물체에 막히고, 반사판을 만나 여러 방향으로 공간을 가릅니다.</p>
+          <div class="foot"><span class="badge mono">MOUSE / WEBCAM</span><span class="enter mono">ENTER →</span></div>
+        </a>
+        <a class="lab-card" href="./swarm.html">
+          <div class="num mono">10 / NEW</div><h2>군집 생물</h2>
+          <div class="caption">SWARM / COLLECTIVE BEHAVIOUR</div>
+          <p>천천히 내민 손에는 무리가 모이고, 빠르게 휘두르면 갈라집니다. 두 손을 벌렸다 모으며 서로 간격을 지키는 생물들을 이끌어 보세요.</p>
+          <div class="foot"><span class="badge mono">MOUSE / WEBCAM</span><span class="enter mono">ENTER →</span></div>
+        </a>
+        <a class="lab-card" href="./growth.html">
+          <div class="num mono">11 / NEW</div><h2>자라는 연결망</h2>
+          <div class="caption">GROWTH / LIVING TRAIL NETWORKS</div>
+          <p>먹이점을 놓으면 길들이 자라 연결됩니다. 장벽으로 길을 막아 보세요. 손을 놓은 뒤에도 연결망은 흔적을 따라 변합니다.</p>
+          <div class="foot"><span class="badge mono">MOUSE / WEBCAM</span><span class="enter mono">ENTER →</span></div>
+        </a>
+        <a class="lab-card" href="./cloth.html">
+          <div class="num mono">12 / NEW</div><h2>웹캠 직물</h2>
+          <div class="caption">WEBCAM FABRIC / GRAB &amp; RELEASE</div>
+          <p>내 영상이 붙은 천을 양손으로 집어 늘여 보세요. 놓으면 천이 흔들리며 제자리로 돌아오고 빛 아래 주름이 드러납니다.</p>
+          <div class="foot"><span class="badge mono">MOUSE / WEBCAM</span><span class="enter mono">ENTER →</span></div>
+        </a>
+        <a class="lab-card" href="./harp.html">
+          <div class="num mono">13 / NEW</div><h2>공중 현악기</h2>
+          <div class="caption">AIR HARP / PLAYABLE LIGHT</div>
+          <p>빛나는 현을 집어 당겼다 놓으면 진동과 소리가 함께 울립니다. 두 손 사이의 간격으로 장력을 바꾸며 짧은 선율을 연주하세요.</p>
+          <div class="foot"><span class="badge mono">MOUSE / WEBCAM / SOUND</span><span class="enter mono">ENTER →</span></div>
         </a>
       </div>
 

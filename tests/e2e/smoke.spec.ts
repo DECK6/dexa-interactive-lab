@@ -53,7 +53,7 @@ function expectSameOriginAssets(page: Page, w: Watch): void {
   expect(assets.filter((u) => !u.startsWith(origin))).toEqual([])
 }
 
-test('landing page offers all eight experiences', async ({ page }) => {
+test('landing page offers all thirteen experiences', async ({ page }) => {
   const w = watch(page)
   await page.goto('./')
 
@@ -70,6 +70,11 @@ test('landing page offers all eight experiences', async ({ page }) => {
     './fluid.html',
     './graffiti.html',
     './snow.html',
+    './optics.html',
+    './swarm.html',
+    './growth.html',
+    './cloth.html',
+    './harp.html',
   ]
   await expect(cards).toHaveCount(hrefs.length)
   for (const [i, href] of hrefs.entries()) {
@@ -88,6 +93,9 @@ test('01 off-axis window boots and reports no face', async ({ page }) => {
   await expect(page.locator('canvas#stage')).toBeVisible()
   await expect(page.locator('.hud-tl .wordmark')).toBeVisible()
   await expect(page.locator('.hud-bc')).toContainText('머리를 움직여')
+
+  await page.locator('[data-action="camera"]').click()
+  await expect(page.locator('canvas#stage')).toHaveAttribute('data-input', 'camera', { timeout: 30_000 })
 
   await waitForRenderLoop(page)
   // Written by the loop from the tracker's own pose, not by the initial markup.
@@ -117,9 +125,12 @@ test('02 finger frame boots and reports no hands', async ({ page }) => {
   const w = watch(page)
   await page.goto('fingerframe.html')
 
-  await expect(page.locator('canvas#stage')).toBeVisible()
+  await expect(page.locator('canvas#relief-stage')).toBeVisible()
   await expect(page.locator('.hud-tl .wordmark')).toBeVisible()
   await expect(page.locator('.hud-bc')).toContainText('사각형을 만들어 보세요')
+
+  await page.locator('[data-action="camera"]').click()
+  await expect(page.locator('[data-readout="input"]')).toContainText('라이브 카메라', { timeout: 30_000 })
 
   await waitForRenderLoop(page)
   await expect(page.locator('.hud-tr .dot')).toHaveClass(/\boff\b/)

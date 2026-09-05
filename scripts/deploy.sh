@@ -5,7 +5,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 # adxdeck main branch lives in the blog-main worktree since the 2026-08-16
 # recovery consolidation (see adxdeck-worktrees/RECOVERY.md).
-DEST="../adxdeck-blog-main/interactive"
+DEST="${1:-../adxdeck-blog-main/interactive}"
 [ -d "$DEST/.." ] && git -C "$DEST/.." rev-parse --is-inside-work-tree >/dev/null 2>&1 || {
   echo "deploy target $DEST is not inside a git worktree — refusing"; exit 1;
 }

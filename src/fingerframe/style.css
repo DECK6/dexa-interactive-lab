@@ -1,0 +1,46 @@
+.stage canvas{position:absolute;inset:0}.stage canvas[hidden]{display:none}.stage{touch-action:none}.frame-guide{pointer-events:none}
+.ff-controls{position:fixed;z-index:15;left:28px;top:92px;width:268px;padding:0 18px 14px 0;max-height:calc(100dvh - 175px);overflow:auto;scrollbar-width:thin;scrollbar-color:#33474b transparent;color:#b9c8cc;font-size:12px;}
+.ff-controls:before{content:'';position:fixed;z-index:-1;pointer-events:none;inset:60px auto 50px 0;width:365px;background:linear-gradient(90deg,#081014ed 5%,#081014a6 78%,transparent)}
+.ff-controls button,.ff-controls select{font:500 11px var(--font-sans);background:#102127e8;color:#b9d1d7;border:1px solid #375059;padding:9px 10px;cursor:pointer;border-radius:3px;transition:background .15s,color .15s;}
+.ff-controls button:hover{background:#23454c;color:white}.ff-controls button:disabled{opacity:.35;cursor:default}.ff-switch{display:flex;margin-bottom:30px;gap:0}.ff-switch button{border-radius:0;padding:9px 13px;font-family:var(--font-mono);font-size:10px}.ff-switch button[aria-pressed=true]{background:var(--cyan);border-color:var(--cyan);color:#092026}
+.ff-eyebrow{font:9px var(--font-mono);letter-spacing:.22em;color:#ff845b;margin-bottom:14px}.ff-controls h1{font-size:30px;font-weight:500;letter-spacing:-1.8px;line-height:1.4;color:#edf5ef;margin:0 0 17px}.ff-controls h1 span{color:#83dadc}.ff-intro{font-size:12px;line-height:1.9;color:#9db1b7;margin:0 0 24px}
+.ff-source{font:9px var(--font-mono);letter-spacing:.04em;color:#94e2e4;display:flex;align-items:center;gap:7px;margin-bottom:10px}.ff-source-dot{width:5px;height:5px;background:#ff8955;border-radius:50%}.ff-camera-row{display:flex;gap:7px}.ff-camera-row button{font-size:10px;padding:7px 9px}.ff-notice{min-height:34px;font-size:10px;line-height:1.7;color:#819ca5;margin:10px 0 17px}
+.ff-steps{padding:12px 0;margin:0;border-top:1px solid #33505a66;list-style:none;display:flex;justify-content:space-between;gap:8px;font-size:9px;color:#78939a}.ff-steps b{display:block;font:10px var(--font-mono);margin-bottom:5px;color:#547078}.ff-controls[data-phase=focusing] [data-step=capture],.ff-controls[data-phase=holding] [data-step=hold],.ff-controls[data-phase=cooldown] [data-step=place]{color:#b9f9f2}.ff-progress{height:2px;background:#284049;margin:2px 0 10px}.ff-progress i{display:block;height:100%;width:0;background:#ff8357}.ff-status{font-size:10px;color:#a9e5e2;min-height:28px;line-height:1.7}.ff-actions{display:flex;gap:7px;margin-bottom:15px}.ff-actions button{flex:1;padding:10px 6px}.ff-actions .primary{background:#ff794a;color:#132228;border-color:#ff794a}
+.ff-transform label{display:flex;align-items:center;justify-content:space-between;font-size:10px;margin:6px 0;color:#8fadb5}.ff-controls input[type=range]{width:155px;accent-color:#83dedd;height:15px;cursor:pointer}.ff-gesture-help{font-size:9px;color:#7899a2;line-height:1.8;margin:12px 0 16px}.ff-collection{display:flex;align-items:center;justify-content:space-between;padding-top:13px;border-top:1px solid #3d5a6466;font:10px var(--font-mono);color:#c2e1e6}.ff-collection button{border:0;background:none;color:#7898a1;font-size:10px;padding:3px 8px}.ff-footnote{font-size:9px;color:#5f808b;line-height:1.8;margin:12px 0 0}.ff-filter-controls label{font:9px var(--font-mono);color:#83dedd}.ff-filter-controls select{display:block;width:100%;margin:12px 0}.ff-filter-controls p{font-size:10px;line-height:1.8;color:#8cabaf;margin:0 0 24px}
+.hud-bc{font-size:10px;max-width:calc(100% - 40px);width:max-content}.hud-tl{font-size:9px}.hud-tl .title{font-size:10px}.hud-flash{z-index:20}
+@media(min-width:1000px) and (max-height:800px){.ff-controls{top:80px;width:250px;max-height:calc(100dvh - 150px)}.ff-switch{margin-bottom:17px}.ff-controls h1{font-size:26px;margin-bottom:10px}.ff-intro{margin-bottom:14px}.ff-notice{margin-bottom:8px}.ff-gesture-help{margin:8px 0}.ff-footnote{margin-top:8px}}
+/* The drawer is only mounted at mobile widths; desktop setting positions are preserved. */
+.ff-mobile-toggle{display:none}
+@media(max-width:720px){
+  .ff-controls{left:12px;right:12px;top:auto;bottom:70px;width:auto;max-height:none;padding:8px 12px;background:#071419f5;border:1px solid #29424a;border-radius:6px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 8px;overflow:visible}
+  .ff-controls:before{display:none}
+  .ff-eyebrow,.ff-controls h1,.ff-intro,.ff-gesture-help,.ff-steps{display:none}
+  .ff-source{font-size:9px;line-height:1.5;margin:0;grid-column:1;grid-row:1;align-self:center;min-width:0}
+  .ff-mobile-toggle{display:block;grid-column:2;grid-row:1;min-height:44px;min-width:88px;font-size:11px;padding:7px 9px}
+  .ff-relief-controls{grid-column:1/-1;grid-row:2;min-width:0}
+  .ff-relief-controls[hidden]{display:none}
+  .ff-progress{margin:1px 0 5px}
+  .ff-status{font-size:10px;min-height:23px;line-height:1.7}
+  .ff-actions{margin:0;gap:8px}
+  .ff-actions button{min-height:44px;padding:10px 7px;font-size:12px}
+  .ff-collection{grid-column:1/-1;grid-row:4;min-height:44px;padding:0;border-top:1px solid #34505a88;font-size:10px}
+  .ff-collection button{min-height:44px;min-width:66px;font-size:11px}
+  .ff-mobile-settings{display:none;grid-column:1/-1;grid-row:3;max-height:min(260px,30dvh);overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;padding:8px 5px 10px 0;border-top:1px solid #34505a88;scrollbar-width:thin;scrollbar-color:#86ced4 #183038}
+  .ff-controls[data-expanded=true] .ff-mobile-settings{display:block}
+  .ff-transform label{display:flex;min-height:44px;font-size:11px;margin:0;gap:12px}
+  .ff-controls input[type=range]{width:72%;height:44px;touch-action:pan-x}
+  .ff-switch{display:flex;margin:10px 0;gap:0}
+  .ff-switch button{min-height:44px;flex:1;font-size:10px;padding:9px}
+  .ff-camera-row{gap:8px}
+  .ff-camera-row button{min-height:44px;flex:1;font-size:11px;padding:8px}
+  .ff-notice{font-size:10px;min-height:0;margin:9px 0;line-height:1.8}
+  .ff-filter-controls{margin-top:10px}
+  .ff-filter-controls p{font-size:10px;margin-bottom:12px}
+  .ff-filter-controls select{min-height:44px;margin:8px 0;font-size:11px;width:100%}
+  .ff-footnote{font-size:9px;line-height:1.8;margin:12px 0 0}
+  .hud-bc{bottom:12px;font-size:8px;padding:8px;line-height:1.7;max-width:calc(100% - 24px)}
+  .hud-tl{top:12px;left:12px;gap:5px;max-width:calc(100% - 108px)}
+  .hud-tl .wordmark{font-size:11px}
+  .hud-tr{top:12px;right:12px}
+  .hud-flash{bottom:270px;width:max-content;max-width:95%;font-size:9px}
+}
