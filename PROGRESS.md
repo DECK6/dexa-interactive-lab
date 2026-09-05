@@ -46,7 +46,7 @@
 - [x] AC9: `bunx tsc --noEmit` 0, `bun test` 전부 통과(모듈별 ≥6 테스트), `bun run build` exit 0
 - [x] AC10: Playwright 9케이스(랜딩+8) 콘솔 에러 0, 동일 출처 자산
 - [x] AC11: 합성 인물 y4m으로 세그멘테이션 극성·에코·눈 착지·먼지 얼굴 비주얼 QA 스크린샷 검수
-- [ ] AC12: 랜딩 8카드, README 갱신, adxdeck 배포(로컬 커밋), projects.json dev-16 설명 8종 — 푸시는 승인 대기
+- [x] AC12: 랜딩 8카드, README 갱신, adxdeck 배포, projects.json dev-16 설명 8종 — 사용자 승인 후 푸시 완료(lab 30d561d, adxdeck 122d202)
 
 ### Batches (v2)
 - [x] V0 설계: DESIGN.md v2 addendum — 21:05
@@ -55,7 +55,7 @@
 - [x] V2 구현(Codex sol ×5 병렬, 21:22 발주 → 22:20 전원 완료): echo / dust / fluid / graffiti / snow — 발주서 scratchpad/prompts/*.md
       게이트: 모듈별 tsc 0 + bun test 통과 → Fable 코드 리뷰 → build → e2e
 - [x] V3 QA(22:40): 합성 인물 y4m 비주얼 QA, 수정 라운드(Codex 재위임 또는 Fable 직접)
-- [ ] V4 마감: README, PROGRESS, deploy.sh → adxdeck-blog-main 로컬 커밋, projects.json — 푸시 승인 요청
+- [x] V4 마감(22:55 푸시): README, PROGRESS, deploy.sh → adxdeck-blog-main 로컬 커밋, projects.json — 푸시 승인 요청
 
 ### Log (v2)
 - 21:20 기반 커밋 1b97d4b. Codex sol ×5 발주 21:22.
