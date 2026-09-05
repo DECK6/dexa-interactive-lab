@@ -1,6 +1,6 @@
 # HANDOFF — DEXA INTERACTIVE LAB
 
-2026-09-05 Codex 확장 구현·검증 완료. 이전 배포 기준은 lab `443fac0`, adxdeck `122d202`다. 마스터가 이번 확장분의 푸시·배포를 요청했으며, 배포 기록은 PROGRESS와 AKM 개발 로그에 남긴다.
+2026-09-05 Codex 확장 구현·검증 완료. 이전 배포 기준은 lab `443fac0`, adxdeck `122d202`다. 이번 확장분은 구현 `3243729`, adxdeck `2b1b3f0`으로 main 푸시·배포 완료했다. GitHub Pages 성공과 라이브 자산 48/48 일치를 확인했다. 배포 기록은 PROGRESS와 AKM 개발 로그에 남겼다.
 
 ## 현재 작업
 
